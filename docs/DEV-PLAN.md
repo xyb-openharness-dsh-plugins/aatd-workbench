@@ -2,7 +2,7 @@
 
 病种：α1-抗胰蛋白酶缺乏症（AATD，罕见病 #6 · R2 非肿瘤慢性病型 · T2）
 仓：aatd-workbench（私有，Issue 认领 #58）
-更新：2026-11-05 夜间无人值守窗口。状态只分：✅ 实测完成、🔧 骨架/草案、⏳ 未实现、⛔ 闸口待签。文档自述不能替代证据。
+更新：2026-11-05 04:05（夜班收尾）。状态只分：✅ 实测完成、🔧 骨架/草案、⏳ 未实现、⛔ 闸口待签。文档自述不能替代证据。
 
 ## 认领理由（M0 记录）
 
@@ -28,15 +28,15 @@
 | 阶段 | 范围 | 出口与证据 | 状态 |
 | --- | --- | --- | --- |
 | M0 | 认领（Issue #58）、starter init（205 文件）、接线前置（patch config.root + dsh 块 + repository）、文档九件、基线 check | `npm run check` staticPass=true 退出码 0；patch 根声明警告已记缺口（服务端是否读 config.root 待核） | ✅ 实测完成（骨架） |
-| M1 | 医学十主题台账、用户研究证据分层（0 访谈如实）、家族结构对比（cervical + aml）、DIFF-MATRIX 全量（重名率实测）、SPEC、INTERACTION-DESIGN | 本表 + 各文档头部签认栏 | ⏳ |
-| M2 | 两套合成档案演示数据构建器 + prototypes/v0.2 四件套 + 检查点清单逐项 | 页签走查数字、禁词 0、切档不串 | ⏳ |
-| M3 | schema/0001_initial.sql + freeze-contract（sha256） | 内存全建；无判定列 | ⏳ |
-| M4 | scripts/fetch-aatd-trials-2026.mjs → research/aatd/ 四件套 | manifest=jsonl=sqlite 计数断言 | ⏳ |
-| M5 | 七步移植 + apiBase 契约 + test 五套 + check 全绿 | 版本十处同源；单测全过 | ⏳ |
-| M6 | 装机 DSH Desktop | 不可用则如实记未验证 | ⏳ |
-| M7 | tag + release（无人值守只备草稿 docs/release-draft/） | — | ⏳ |
-| M8 | BACKLOG 状态行回填（无人值守只备 PR 草稿） | — | ⏳ |
-| M9 | 经验收敛回流 starter + MORNING-REVIEW.md | 回流 commit 清单 | ⏳ |
+| M1 | 医学十主题台账、用户研究证据分层（0 访谈如实）、家族结构对比（cervical + aml）、DIFF-MATRIX 全量（重名率实测）、SPEC、INTERACTION-DESIGN | docs/signoffs/G1-自动签认.md；重名率 4/11=36% | ✅ 实测完成（G1 签认待追认） |
+| M2 | 两套合成档案演示数据构建器 + prototypes/v0.2 四件套 + 检查点清单逐项 | docs/signoffs/G2-自动签认.md；探针 40 路由/响应式/primer 10·10/page-view 13·13/extra 21·21；评审 P0=0 | ✅ 实测完成（G2 签认待追认） |
+| M3 | schema/0001_initial.sql + freeze-contract（sha256） | schema/freeze-contract.md sha256=edd338…4f9；test/schema 9/9；G3 签认 | ✅ 实测完成 |
+| M4 | research/aatd/ 四件套（fetch-list / fetch-cn-registries / build-snapshot / LEDGER） | check-trial-snapshot PASS：147/147，4 通道状态 | ✅ 实测完成 |
+| M5 | 七步移植 + apiBase 契约 + MinerU v2 六部件 + test 五套 | check 17 步=0；test 60/60；audit 44/44；V1 签认（主控复测） | ✅ 实测完成 |
+| M6 | 装机 DSH Desktop | tgz 48 文件/bundle #61/宿主清单含本包/:43129 鉴权 401 实证；V2 签认；V3 停闸待人工 | ✅ 装机完成（会话级未验证） |
+| M7 | tag + release（无人值守只备草稿 docs/release-draft/） | RELEASE-NOTES-v0.5.0.md 草稿就绪 | 🔧 草稿冻结（晨审放行） |
+| M8 | BACKLOG 状态行回填（无人值守只备 PR 草稿） | BACKLOG-STATUS-PR.md 草稿就绪（31 号口径） | 🔧 草稿冻结（晨审放行） |
+| M9 | 经验收敛回流 starter + MORNING-REVIEW.md | starter 1.10.0-rc.13（自排除修复+L61–L65+probe 模板）；starter 自检 214 pass/test 67·67；MORNING-REVIEW.md 六节 | ✅ 实测完成 |
 
 ## 闸口记录
 

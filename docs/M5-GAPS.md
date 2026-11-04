@@ -29,3 +29,5 @@
 
 - `scripts/check-schema.mjs` 从底本移植时兼容了本仓 freeze-contract.md 的列表式哈希格式（底本是表格行）；两仓格式不同属格式差异，校验语义一致（哈希逐一比对）。
 - 改包升版：package.json 0.1.0 → 0.5.0；VERSION / lib/version.js / lib/client.js 注入 / public 页脚与 ver-chip / README / CHANGELOG 由 `scripts/build-version.mjs` + `scripts/build-client.mjs` 生成链同源（check-version-literal 断言）。
+
+- 骨架：scripts/serve-artifact.mjs（starter 版）期望 dsh/store.js 导出 openStore——本仓 store.js API 不同，artifact 级走查探针未接。待 0002 轮统一 store 导出面或移植 dev-server 便利脚本时一并处理。
