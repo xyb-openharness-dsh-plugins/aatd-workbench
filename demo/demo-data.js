@@ -5,7 +5,7 @@
  * 字段结构与 schema/0001_initial.sql 逐表对齐：
  *   profiles / care_context / metric_defs / metric_records / reports / notes /
  *   med_events / episodes / visits / doc_refs / ai_candidates / infusion_series /
- *   flare_episodes / family_lines / section_titles
+ *   flare_episodes / family_lines / section_titles / trial_demo / demo_prompts
  * 数据层契约（与 schema 注释一致）：
  *   - 缺失一律显式 null，不用空串冒充；
  *   - 更正 = 新增版本（旧记录 in_use=0，corrected_by 指向新记录），旧版本保留；
@@ -36,12 +36,12 @@
   const metric_defs = [
     /* 档案 A · 小陈：目录先行，多数还没有记录（未检测 ≠ 阴性） */
     { id: nid(), profile_key: 'A', key: 'aat_a', name: '血清 AAT 浓度（散射比浊法）', group_key: 'lung', unit: 'mg/dL', comparable_key: 'serum-neph-A', ord: 1 },
-    { id: nid(), profile_key: 'A', key: 'fev1_a', name: 'FEV1 占预计值 %（肺功能室）', group_key: 'lung', unit: '%', comparable_key: 'spiro-A', ord: 2 },
+    { id: nid(), profile_key: 'A', key: 'fev1_a', name: 'FEV1 占预计值 %（肺功能室）', group_key: 'lung', unit: '%', unit_note: '单位形态【待核】', comparable_key: 'spiro-A', ord: 2 },
     { id: nid(), profile_key: 'A', key: 'alt_a', name: 'ALT（IFCC 法）', group_key: 'liver', unit: 'U/L', comparable_key: 'ifcc-A', ord: 3 },
     { id: nid(), profile_key: 'A', key: 'ggt_a', name: 'GGT（IFCC 法）', group_key: 'liver', unit: 'U/L', comparable_key: 'ifcc-A', ord: 4 },
     /* 档案 B · 老周：肺功能两组（省医院体描仪 / 社区便携仪），跨组不合并 */
-    { id: nid(), profile_key: 'B', key: 'fev1_b1', name: 'FEV1 占预计值 %（省人民医院 · 体描仪）', group_key: 'lung', unit: '%', comparable_key: 'spiro-bodybox', ord: 1 },
-    { id: nid(), profile_key: 'B', key: 'fev1_b2', name: 'FEV1 占预计值 %（社区卫生服务中心 · 便携仪）', group_key: 'lung', unit: '%', comparable_key: 'spiro-portable', ord: 2 },
+    { id: nid(), profile_key: 'B', key: 'fev1_b1', name: 'FEV1 占预计值 %（省人民医院 · 体描仪）', group_key: 'lung', unit: '%', unit_note: '单位形态【待核】', comparable_key: 'spiro-bodybox', ord: 1 },
+    { id: nid(), profile_key: 'B', key: 'fev1_b2', name: 'FEV1 占预计值 %（社区卫生服务中心 · 便携仪）', group_key: 'lung', unit: '%', unit_note: '单位形态【待核】', comparable_key: 'spiro-portable', ord: 2 },
     { id: nid(), profile_key: 'B', key: 'dlco_b', name: 'DLCO 占预计值 %（省人民医院）', group_key: 'lung', unit: '%', comparable_key: 'dlco-bodybox', ord: 3 },
     { id: nid(), profile_key: 'B', key: 'aat_b1', name: '血清 AAT 浓度（免疫比浊法）', group_key: 'lung', unit: 'mg/dL', comparable_key: 'serum-immunoturbid', ord: 4 },
     { id: nid(), profile_key: 'B', key: 'aat_b2', name: '血清 AAT 浓度（散射比浊法）', group_key: 'lung', unit: 'mg/dL', comparable_key: 'serum-nephelometry', ord: 5 },
@@ -67,6 +67,17 @@
     { id: nid(), profile_key: 'B', kind: 'caregiver', author_role: 'family', content: '还没跟孩子说这次住院的事，没商量好怎么开口。', occurred_on: '2026-10-22', is_private: 1, in_use: 1, corrected_by: null, created_at: '2026-10-22' },
     { id: nid(), profile_key: 'B', kind: 'question', author_role: 'self', content: '想问肝病科：下次复查要不要加做肝弹性超声？', occurred_on: '2026-09-18', is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-09-18' }
   ];
+  /* 私密改写链示例（档案 B）：旧版本 is_private=1 且 in_use=0（corrected_by 指向新版本），
+     新版本 is_private=0、in_use=1。
+     口径（三出口共用，见 prototypes/v0.2/app.js filterPrivate 注释）：按 corrected_by 链溯源，
+     链上任一版本为私密，则旧私密原文不进看板、不进复诊准备导出、不进 AI 上下文；
+     只有最新的非私密新版本可出口，且它只承载更正后的文本、不复述旧原文。
+     即：下方「半夜咳醒」的情绪化原文在三个出口都不可见，可见的只有「夜间咳嗽加重」这条更正版。 */
+  {
+    const rewriteNew = { id: nid(), profile_key: 'B', kind: 'caregiver', author_role: 'family', content: '照护记录（更正版）：老周夜间咳嗽加重一次，白天精神尚可；原记录含个人情绪内容，已改写为事实记录，旧版本保留、默认不展示。', occurred_on: '2026-10-24', is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-10-25' };
+    const rewriteOld = { id: nid(), profile_key: 'B', kind: 'caregiver', author_role: 'family', content: '老周半夜又咳醒了，我心里发慌，是不是下一步就要住院了——这一晚没再睡着。', occurred_on: '2026-10-24', is_private: 1, in_use: 0, corrected_by: rewriteNew.id, created_at: '2026-10-24' };
+    notes.push(rewriteOld, rewriteNew);
+  }
   const noteA1 = notes[0].id, noteA3 = notes[2].id;
   const noteBPlan = notes[4].id, noteBLiver = notes[5].id, noteBFlare = notes[7].id;
 
@@ -166,7 +177,8 @@
 
   /* ---------- AI 候选（ai_candidates）：拒收零副作用，核对前不入事实层 ---------- */
   const ai_candidates = [
-    { id: nid(), profile_key: 'A', target_table: 'notes', payload: { kind: 'doctor_quote', content: '基因分型结果：Pi*ZZ（转写自报告页，尚未核对原件）。', occurred_on: null }, status: 'pending', created_at: '2026-10-20' },
+    /* 档案 A 唯一在档报告是「血清 AAT 浓度化验单」（r-a1），候选来源说明与之一致 */
+    { id: nid(), profile_key: 'A', target_table: 'metric_records', payload: { metric_key: 'aat_a', value_num: 28, measured_on: '2026-10-08', source: '血清 AAT 浓度化验单（散射比浊法）· 第 1 页 · 尚未核对原件' }, status: 'pending', created_at: '2026-10-20' },
     { id: nid(), profile_key: 'B', target_table: 'metric_records', payload: { metric_key: 'alt_b', value_num: 63, measured_on: '2026-09-18', source: '肝功能化验单 · 第 1 页' }, status: 'accepted', created_at: '2026-09-19' }
   ];
 
@@ -218,9 +230,23 @@
 
   /* 一图秀与泳道的事件（用药 / 就诊 / 检查 / 缓解开始 / 加重）全部由上方事实表派生，不另立数据源。 */
 
+  /* ---------- 临床研究登记摘录（trial_demo）：登记状态与入排均为演示占位，非真实登记 ---------- */
+  const trial_demo = [
+    { id: 'DEMO-1', title: 'AATD 相关登记研究（合成示例）', status: '招募中（演示占位）', kind: '观察性', crit: '登记状态、入排条件均为演示占位文本，非真实登记；以研究中心答复为准。', url: 'https://clinicaltrials.gov/search?cond=Alpha-1%20Antitrypsin%20Deficiency' },
+    { id: 'DEMO-2', title: 'AATD 相关干预研究（合成示例）', status: '尚未招募（演示占位）', kind: '干预性', crit: '登记状态、入排条件均为演示占位文本，非真实登记；以研究中心答复为准。', url: 'https://clinicaltrials.gov/search?cond=Alpha-1%20Antitrypsin%20Deficiency' }
+  ];
+
+  /* ---------- 复诊准备示例问题（demo_prompts）：「加一个问题」按钮的预填文案，按档案取 ---------- */
+  const demo_prompts = {
+    A: '基因分型报告出来后，下一步随访怎么排？',
+    B: '下次复查要不要加做肝弹性超声？'
+  };
+
   window.DEMO_DATA = {
     meta: { generated: '2026-11-05', demo_label: '合成示例 · 仅演示' },
     profiles,
+    trial_demo,
+    demo_prompts,
     care_context,
     metric_defs,
     metric_records,

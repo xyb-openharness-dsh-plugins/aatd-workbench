@@ -84,9 +84,20 @@ const visitsFor = (pk) => rows('visits', pk).slice().sort((a, b) => String(a.vis
 const sectionTitle = (pk, key) => { const t = (D.section_titles || []).find((s) => s.profile_key === pk && s.key === key); return t ? t.title : key; };
 const careValue = (pk) => (D.care_context || []).filter((c) => c.profile_key === pk).sort((a, b) => a.ord - b.ord).map((c) => c.value);
 
-/* 私密三出口共用同一过滤函数（看板 / 复诊准备导出 / AI 上下文三处调用同一份） */
+/* 私密三出口共用同一过滤函数（看板 / 复诊准备导出 / AI 上下文三处调用同一份）。
+ * 更正链口径（按 corrected_by 链溯源）：
+ *   1) 自身 is_private=1 的版本永不出口；
+ *   2) 已被更正的旧版本（corrected_by 非空，即「旧原文」）永不出口；
+ *   3) 因此链上任一版本为私密时，该链的旧原文在三出口都不可见，
+ *      只有最新的非私密新版本可出口，且它只承载更正后的文本、不复述旧原文。
+ * 演示数据见 demo/demo-data.js「私密改写链示例」：旧版私密情绪原文 + 新版公开事实记录，
+ *   看板 / 导出 / AI 上下文三处都只出现更正版，旧私密原文任何出口都不可见。 */
 function filterPrivate(list) {
-  return (list || []).filter((x) => !x.is_private);
+  return (list || []).filter((x) => {
+    if (x.is_private) return false;
+    if (x.corrected_by) return false; /* 旧原文：已被新版本取代，任何出口不出现 */
+    return true;
+  });
 }
 function privateCount(list) { return (list || []).filter((x) => x.is_private).length; }
 function privateLabel(n, pn) { return pn > 0 ? `${n} 条中私密 ${pn} 条（默认不进导出、看板摘要与 AI 上下文）` : `${n} 条（无私密项）`; }
@@ -96,8 +107,9 @@ const utcOf = (s) => { const m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2})
 const dayDiff = (from, to) => { const a = utcOf(from), b = utcOf(to); return a === null || b === null ? null : Math.round((b - a) / 86400000); };
 const todayISO = () => new Date().toISOString().slice(0, 10);
 const fmtDate = (d) => d === null || d === undefined || d === '' ? '未记录' : d;
+/* 看板摘要口径：私密发作不进计数（N 条中私密 M 条在 UI 上如实标注） */
 function lastFlareInfo(pk) {
-  const eps = episodesFor(pk);
+  const eps = filterPrivate(episodesFor(pk));
   if (!eps.length) return { mode: 'none' };
   const open = eps.find((e) => !e.ended_on);
   if (open) return { mode: 'open', ep: open, days: dayDiff(open.started_on, todayISO()) };
@@ -106,7 +118,7 @@ function lastFlareInfo(pk) {
 }
 function flares90(pk) {
   const cut = new Date(Date.now() - 90 * 86400000).toISOString().slice(0, 10);
-  return episodesFor(pk).filter((e) => e.started_on >= cut);
+  return filterPrivate(episodesFor(pk)).filter((e) => e.started_on >= cut);
 }
 /* 输注计次与缺口周：由 med_events 现算（schema 口径 D：计次不落库） */
 function infusionStats(pk, s) {
@@ -203,8 +215,10 @@ function pageFacts(view) {
       };
     }
     case 'course': {
-      const eps = episodesFor(pk);
-      return { facts: [`发作—缓解区间共 ${eps.length} 条`, ...eps.slice(-3).map((e) => `${e.started_on} → ${e.ended_on || '缓解未记录'}：${e.title}`)], missing: [] };
+      const epsAll = episodesFor(pk);
+      const eps = filterPrivate(epsAll);
+      const pn = privateCount(epsAll);
+      return { facts: [`发作—缓解区间共 ${eps.length} 条${pn ? `（私密 ${pn} 条已排除，不进入本提示词）` : ''}`, ...eps.slice(-3).map((e) => `${e.started_on} → ${e.ended_on || '缓解未记录'}：${e.title}`)], missing: [] };
     }
     case 'records': {
       const cands = rows('ai_candidates', pk);
@@ -215,20 +229,30 @@ function pageFacts(view) {
     }
     case 'labs': case 'chart': {
       const defs = metricDefs(pk);
+      let recTotal = 0, recPrivate = 0;
       const lines = defs.map((d) => {
-        const rs = recsOfDef(pk, d.id);
+        const rsAll = recsOfDef(pk, d.id);
+        const rs = filterPrivate(rsAll);
+        recTotal += rsAll.length; recPrivate += privateCount(rsAll);
         const last = rs[rs.length - 1];
         return last ? `${d.name} 最近：${last.value_num != null ? last.value_num + ' ' + (d.unit || '') : (last.value_text || '文本记录')}（${fmtDate(last.measured_on)}）` : `${d.name}：暂无记录`;
       });
+      if (recPrivate) lines.unshift(`化验记录 ${recTotal} 条中私密 ${recPrivate} 条已排除，不进入本提示词`);
       return { facts: lines, missing: ['两次化验之间医生的原话（如有）'] };
     }
     case 'treatment': {
-      const ss = seriesFor(pk);
+      const ssAll = seriesFor(pk);
+      const ss = filterPrivate(ssAll);
+      const ssPn = privateCount(ssAll);
       const facts = ss.length ? ss.map((s) => {
         const st = infusionStats(pk, s);
         return `${s.label}：${s.started_on} → ${s.ended_on || '进行中'}，已记录 ${st.count} 次${st.gaps.length ? `，缺口周 ${st.gaps.length} 个` : ''}`;
       }) : ['尚无输注段记录'];
-      const meds = rows('med_events', pk).filter((m) => m.kind === 'medication');
+      if (ssPn) facts.push(`私密输注段 ${ssPn} 条已排除，不进入本提示词`);
+      const medsAll = rows('med_events', pk).filter((m) => m.kind === 'medication');
+      const meds = filterPrivate(medsAll);
+      const medsPn = privateCount(medsAll);
+      if (medsPn) facts.push(`用药记录 ${medsAll.length} 条中私密 ${medsPn} 条已排除，不进入本提示词`);
       return { facts: [...facts, ...meds.map((m) => `用药：${m.label}（${fmtDate(m.occurred_on)}）`)], missing: [] };
     }
     case 'family': {
@@ -299,7 +323,7 @@ function mcard(def) {
       aria-label="${esc(def.name)}：暂无记录（未检测不等于阴性）">
       <span class="mface front" data-face="front" aria-hidden="false">${cat}<span class="name">${esc(def.name)}</span>
       <span class="na">还没有记录；未检测不等于阴性，查过之后在这里落第一条。</span>
-      <span class="meta"><span>${esc(def.unit || '')}</span><span class="hint">未检测</span></span></span></div>`;
+      <span class="meta"><span>${esc(def.unit || '')}${def.unit_note ? `（${esc(def.unit_note)}）` : ''}</span><span class="hint">未检测</span></span></span></div>`;
   }
   const last = rs[rs.length - 1];
   const numeric = typeof last.value_num === 'number';
@@ -316,6 +340,7 @@ function mcard(def) {
     <span class="mcard-inner">
     <span class="mface front" data-face="front" aria-hidden="false">${cat}<span class="name">${esc(def.name)}</span>
       <span class="val">${last.value_num}<small>${esc(def.unit || '')}</small></span>
+      ${def.unit_note ? `<small class="hint">${esc(def.unit_note)}</small>` : ''}
       ${d ? `<span class="delta">较上次 <em>${d.text}${def.unit ? ' ' + esc(def.unit) : ''}</em>（${esc(fmtDate(d.from))}）</span>` : `<span class="delta">仅 1 次记录，暂无前次可比</span>`}
       <span class="rec">${esc(fmtDate(last.measured_on))} · ${esc(last.source_kind === 'report' ? '来自报告' : '手工录入')}</span></span>
     <span class="mface back" data-face="back" aria-hidden="true">${cat}<span class="name">${esc(def.name)}</span>
@@ -527,11 +552,13 @@ function vHome() {
     : ['发作记录', '暂无', '记一次加重会出现在这里'];
   const notesAll = notesFor(pk).filter((n) => n.kind === 'symptom' || n.kind === 'caregiver');
   const visibleNotes = filterPrivate(notesAll);
+  /* 计划卡：私密记录的医生原话不进看板摘要（改写链旧私密原文同样不可见） */
+  const notesForDash = filterPrivate(notesFor(pk));
   const cards = MDEFS().filter((d) => recsOfDef(pk, d.id).length).map((d) => mcard(d)).join('');
   const emptyCards = MDEFS().filter((d) => !recsOfDef(pk, d.id).length).map((d) => mcard(d)).join('');
   const lastVisit = visitsFor(pk)[visitsFor(pk).length - 1];
-  const qs = notesFor(pk).filter((n) => n.kind === 'question');
-  const plan = notesFor(pk).find((n) => n.kind === 'doctor_quote' && /行动计划/.test(n.content));
+  const qs = notesForDash.filter((n) => n.kind === 'question');
+  const plan = notesForDash.find((n) => n.kind === 'doctor_quote' && /行动计划/.test(n.content));
   return `${pageHead(false)}
   ${sceneBar()}
   <section class="hero">
@@ -620,6 +647,26 @@ function vCourse() {
     <div class="actions"><button data-action="sub" data-view="course" data-sub="list">打开发作列表 →</button></div></div>`;
 }
 
+/* 更正链历史版本（只读）：旧版本 in_use=0、corrected_by 指向新版本，保留可查。
+ * 本区块只展示旧值 / 日期 / 更正说明，不提供任何删除或覆盖入口；
+ * 三出口（看板 / 导出 / AI 上下文）仍按 filterPrivate 口径只出现现行版本。 */
+function historyVersions(pk) {
+  const all = (D.metric_records || []).filter((r) => r.profile_key === pk && r.in_use === 0 && r.corrected_by);
+  if (!all.length) return '';
+  const findRec = (id) => (D.metric_records || []).find((r) => r.id === id);
+  const lines = all.map((old) => {
+    const neu = findRec(old.corrected_by);
+    const def = (D.metric_defs || []).find((d) => d.id === old.metric_id);
+    const unit = def && def.unit ? ' ' + def.unit : '';
+    const val = (r) => (r.value_num != null ? r.value_num + unit : (r.value_text || '文本记录'));
+    return row(`${esc(def ? def.name : '指标')} · ${esc(fmtDate(old.measured_on))}`,
+      `旧值：${esc(val(old))} → 已由新版本更正${neu ? `为 ${esc(val(neu))}（${esc(fmtDate(neu.measured_on))}）` : ''}。更正说明：人工核对原件后发现抄录有误，以新版本为准；旧版本保留（in_use=0），不覆盖、不删除。`,
+      pill('旧版本 · 只读', 'grey'));
+  }).join('');
+  return `<div class="card" style="margin-top:14px"><div class="card-head"><h2>历史版本（更正链 · 只读）</h2><span class="muted">旧版本保留可查；无删除 / 覆盖入口</span></div>
+    <div class="rows">${lines}</div></div>`;
+}
+
 /* ---------------- 记录与报告（五 Tab） ---------------- */
 function docsTable() {
   const pk = state.profile;
@@ -681,7 +728,8 @@ function vRecords() {
       ${defs.map((d) => { const rs = recsOfDef(pk, d.id); const l = rs[rs.length - 1]; return `<tr><td>${esc(d.name)}</td>
         <td>${l ? esc(l.value_num != null ? `${l.value_num} ${d.unit || ''}` : (l.value_text || '文本记录')) : '<span class="muted">暂无记录</span>'}</td>
         <td>${l ? esc(fmtDate(l.measured_on)) : '—'}</td><td>${l ? esc(l.source_kind === 'report' ? '报告' : '手工') : '—'}</td><td>${esc(d.comparable_key)}</td></tr>`; }).join('')}
-      </tbody></table></div><div class="scroll-hint">左右滑动查看表格</div></div>`;
+      </tbody></table></div><div class="scroll-hint">左右滑动查看表格</div></div>
+    ${historyVersions(pk)}`;
   }
   /* 病情汇总：内容超过 1.5 屏 → 开整页视图 #page=summary */
   return `${pageHead(true)}
@@ -824,11 +872,20 @@ function vFamily() {
     <div class="card"><div class="card-head"><h2>筛查条目清单（${items.length}）</h2><span class="muted">来自医生原话，条目事实</span></div>
       <div class="rows">${items.map((i) => row(esc(i), '是否做、什么时候做，由本人与医生决定')).join('') || '<p class="muted" style="padding:12px">还没有条目。</p>'}</div></div>
   </div>
-  <div class="section-title"><h2>${esc(sectionTitle(pk, 'family'))}</h2><span class="muted">${privateLabel(fl.length, privateCount(fl))} · 页内默认脱敏显示条目数</span></div>
-  <div class="card"><div class="rows">
+  <div class="section-title"><h2>${esc(sectionTitle(pk, 'family'))}</h2><span class="muted">${privateLabel(fl.length, privateCount(fl))} · 页内默认脱敏，展开才显示原话全文</span></div>
+  ${state.privateOpen ? '' : privateGate('家系线索（含医生原话）', fl.length, privateCount(fl))}
+  ${state.privateOpen ? `<div class="card private"><div class="card-head"><h2>医生原话（含私密，仅本页展开）</h2>${pill('私密 · 不进导出', 'grey')}</div>
+  <div class="rows">
     ${fl.map((f) => row(`${esc(f.person_rel)} · ${esc(fmtDate(f.happened_on))}`, esc(f.doctor_quote), pill('私密 · 默认', 'grey'))).join('') || emptyBox('还没有家系线索', '医生谈到家族筛查时，把原话记在这里。')}
   </div>
-  <div class="actions"><button data-action="toast" data-msg="原型内不落库；真实版在这里记一条医生原话（关系称谓 / 原话 / 条目 / 日期）">记录一条医生原话</button>${aiBtn('family')}</div></div>`;
+  <div class="notice" style="margin-top:10px">展开只影响本页显示；这些原话依旧不进导出、不进看板摘要、不进 AI 上下文。</div>
+  <div class="actions"><button data-action="toggle-private">收起</button></div></div>`
+    : `<div class="card"><div class="card-head"><h2>医生原话（脱敏态）</h2><span class="muted">只显示条目数，不显示原文</span></div>
+      <div class="rows">
+        ${row('医生原话条目', `${fl.length} 条（涉及他人健康信息；点上方「本人确认，展开查看」后才显示全文）`)}
+        ${row('筛查条目事实', `${items.length} 类（见上方清单，不涉及原话）`)}
+      </div></div>`}
+  <div class="actions" style="margin-top:12px"><button data-action="toast" data-msg="原型内不落库；真实版在这里记一条医生原话（关系称谓 / 原话 / 条目 / 日期）">记录一条医生原话</button>${aiBtn('family')}</div>`;
 }
 
 /* ---------------- 心理与生活 ---------------- */
@@ -878,10 +935,8 @@ function vMind() {
 }
 
 /* ---------------- 临床研究线索（35 号四段；无匹配指数与判读列） ---------------- */
-const TRIAL_DEMO = [
-  { id: 'DEMO-1', title: 'AATD 相关登记研究（合成示例）', status: '招募中（演示占位）', kind: '观察性', crit: '登记状态、入排条件均为演示占位文本，非真实登记；以研究中心答复为准。', url: 'https://clinicaltrials.gov/search?cond=Alpha-1%20Antitrypsin%20Deficiency' },
-  { id: 'DEMO-2', title: 'AATD 相关干预研究（合成示例）', status: '尚未招募（演示占位）', kind: '干预性', crit: '登记状态、入排条件均为演示占位文本，非真实登记；以研究中心答复为准。', url: 'https://clinicaltrials.gov/search?cond=Alpha-1%20Antitrypsin%20Deficiency' }
-];
+/* 登记摘录唯一源：demo/demo-data.js 的 trial_demo（DEMO_DATA.trial_demo），app.js 不写死数据 */
+const TRIAL_DEMO = D.trial_demo || [];
 function trialFacts(pk) {
   const facts = [];
   const gq = notesFor(pk).find((n) => n.kind === 'doctor_quote' && /基因|浓度/.test(n.content));
@@ -952,7 +1007,7 @@ function buildExportMd() {
   const pk = state.profile, p = P();
   const notesAll = notesFor(pk);
   const visible = filterPrivate(notesAll);
-  const eps = episodesFor(pk).slice(-3).reverse();
+  const eps = filterPrivate(episodesFor(pk)).slice(-3).reverse();
   const ss = seriesFor(pk);
   const L = [`# 复诊准备（演示导出）`, '', `档案：${p.name}（${p.meta}）——${p.demo_label}`, '', '## 受累器官与最近化验（事实）'];
   MDEFS().forEach((d) => {
@@ -1018,6 +1073,7 @@ function vSettings() {
   <div class="card" style="margin-top:14px"><div class="card-head"><h2>口径说明</h2></div>
     <div class="rows">
       ${careValue(pk).map((v) => row(v, '在任何指标 / 趋势页常驻同屏')).join('')}
+      ${row('审核状态', '本台 0 患者访谈、0 临床审核；场景为开发者假设改写。')}
       ${row('表达口径', '本台用发作—缓解、受累器官（肺 / 肝）与随访节律表达；「第几天」由记录算出。')}
       ${row('数据', '演示数据唯一源：demo/demo-data.js；全部为合成示例 · 仅演示，不指向任何真实患者。')}
     </div></div>`;
@@ -1042,7 +1098,7 @@ function pvSummary() {
     const last = rs[rs.length - 1];
     rowsHtml.push(row(esc(d.name), last ? `${last.value_num != null ? last.value_num + ' ' + (d.unit || '') : esc(last.value_text || '文本记录')} · ${esc(fmtDate(last.measured_on))} · 可比组 ${esc(d.comparable_key)}` : '暂无记录（未检测不等于阴性）'));
   });
-  episodesFor(pk).slice().reverse().forEach((e) => rowsHtml.push(row(esc(e.title), `${esc(e.started_on)} → ${esc(fmtDate(e.ended_on))}${e.ended_on ? ' · 持续 ' + dayDiff(e.started_on, e.ended_on) + ' 天' : ' · 缓解未记录'}`)));
+  filterPrivate(episodesFor(pk)).slice().reverse().forEach((e) => rowsHtml.push(row(esc(e.title), `${esc(e.started_on)} → ${esc(fmtDate(e.ended_on))}${e.ended_on ? ' · 持续 ' + dayDiff(e.started_on, e.ended_on) + ' 天' : ' · 缓解未记录'}`)));
   ss.forEach((s) => { const st = infusionStats(pk, s); rowsHtml.push(row(esc(s.label), `${s.started_on} → ${fmtDate(s.ended_on)} · 已记 ${st.count} 次${st.gaps.length ? ' · 缺口周 ' + st.gaps.length + ' 个' : ''}`)); });
   return `<div class="pv-inner">
     <div class="notice">这份汇总是记录整理，不是判读；私密条目已排除（${privateLabel(notesAll.length + fl.length, privateCount(notesAll) + privateCount(fl))}）。判读归呼吸 / 肝病团队。</div>
@@ -1358,11 +1414,14 @@ document.addEventListener('click', (e) => {
     return;
   }
   if (a === 'candidate') { dlgCandidate(el.dataset.id); return; }
+  /* 演示态不落库；真实版默认继承私密标记：接受候选时沿用来源候选 / 原件的 is_private，
+   * 私密来源接受的记录默认仍私密，避免改写为公开造成泄露（口径与 filterPrivate 一致）。 */
   if (a === 'cand-save') { closeDialog(); render(); toast('已接受：写入事实层（演示）；候选留版本不覆盖'); return; }
   if (a === 'cand-reject') { closeDialog(); toast('已拒收这条候选（零副作用，事实层不变）'); return; }
   if (a === 'export-review') { dlgExport(); return; }
   if (a === 'export-save') { state.mem.docs.unshift({ id: 'ex' + Date.now().toString(36), name: `复诊准备 · ${P().name} · ${todayISO()}`, date: todayISO(), type: '导出件', note: '生成文件 · 由导出创建', ref: 'exports/' + todayISO() + '.md' }); closeDialog(); render(); toast('已保存到资料目录 exports/（演示）；在「记录与报告 · 资料库」可见'); return; }
-  if (a === 'add-question') { const q = state.profile === 'A' ? '基因分型报告出来后，下一步随访怎么排？' : '下次复查要不要加做肝弹性超声？'; if (!state.mem.questions.includes(q)) state.mem.questions.push(q); render(); toast('已加入复诊准备的问题清单'); return; }
+  /* 示例问题文案唯一源：demo/demo-data.js 的 demo_prompts，按档案取 */
+  if (a === 'add-question') { const q = (D.demo_prompts || {})[state.profile] || '请写下想问医生的一个问题'; if (!state.mem.questions.includes(q)) state.mem.questions.push(q); render(); toast('已加入复诊准备的问题清单'); return; }
   if (a === 'save-trial') { state.mem.savedTrials = state.mem.savedTrials || []; const id = el.dataset.id; state.mem.savedTrials = state.mem.savedTrials.includes(id) ? state.mem.savedTrials.filter((x) => x !== id) : [...state.mem.savedTrials, id]; render(); return; }
   if (a === 'ask-trial') { const t = TRIAL_DEMO.find((x) => x.id === el.dataset.id); const q = `${t ? t.id : '登记'}：入排条件与我的记录是否相符，需要带哪些材料？`; if (!state.mem.questions.includes(q)) state.mem.questions.push(q); render(); toast('已加入待问清单（以研究中心答复为准）'); return; }
   if (a === 'open-page') { pvOpen(el.dataset.page, el); return; }

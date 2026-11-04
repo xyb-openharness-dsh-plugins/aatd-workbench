@@ -14,13 +14,13 @@
   {
    "profile": "A",
    "route": "home",
-   "mainLen": 8077,
+   "mainLen": 8094,
    "breadcrumb": "看板"
   },
   {
    "profile": "A",
    "route": "labs",
-   "mainLen": 5237,
+   "mainLen": 5254,
    "breadcrumb": "检查与指标"
   },
   {
@@ -38,7 +38,7 @@
   {
    "profile": "A",
    "route": "family",
-   "mainLen": 4615,
+   "mainLen": 5005,
    "breadcrumb": "家系与基因"
   },
   {
@@ -50,7 +50,7 @@
   {
    "profile": "A",
    "route": "settings",
-   "mainLen": 3437,
+   "mainLen": 3552,
    "breadcrumb": "设置"
   },
   {
@@ -74,7 +74,7 @@
   {
    "profile": "A",
    "route": "records/draft",
-   "mainLen": 2625,
+   "mainLen": 2653,
    "breadcrumb": "记录与报告"
   },
   {
@@ -86,7 +86,7 @@
   {
    "profile": "A",
    "route": "records/panel",
-   "mainLen": 2866,
+   "mainLen": 2871,
    "breadcrumb": "记录与报告"
   },
   {
@@ -134,13 +134,13 @@
   {
    "profile": "B",
    "route": "home",
-   "mainLen": 15581,
+   "mainLen": 15884,
    "breadcrumb": "看板"
   },
   {
    "profile": "B",
    "route": "labs",
-   "mainLen": 13378,
+   "mainLen": 13499,
    "breadcrumb": "检查与指标"
   },
   {
@@ -158,7 +158,7 @@
   {
    "profile": "B",
    "route": "family",
-   "mainLen": 5136,
+   "mainLen": 5217,
    "breadcrumb": "家系与基因"
   },
   {
@@ -170,7 +170,7 @@
   {
    "profile": "B",
    "route": "settings",
-   "mainLen": 3434,
+   "mainLen": 3549,
    "breadcrumb": "设置"
   },
   {
@@ -206,7 +206,7 @@
   {
    "profile": "B",
    "route": "records/panel",
-   "mainLen": 3224,
+   "mainLen": 3632,
    "breadcrumb": "记录与报告"
   },
   {
@@ -218,13 +218,13 @@
   {
    "profile": "B",
    "route": "mind/feel",
-   "mainLen": 4474,
+   "mainLen": 4656,
    "breadcrumb": "心理与生活"
   },
   {
    "profile": "B",
    "route": "mind/life",
-   "mainLen": 4182,
+   "mainLen": 4364,
    "breadcrumb": "心理与生活"
   },
   {
