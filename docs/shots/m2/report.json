@@ -14,19 +14,19 @@
   {
    "profile": "A",
    "route": "home",
-   "mainLen": 8094,
+   "mainLen": 9483,
    "breadcrumb": "看板"
   },
   {
    "profile": "A",
    "route": "labs",
-   "mainLen": 5254,
+   "mainLen": 5391,
    "breadcrumb": "检查与指标"
   },
   {
    "profile": "A",
    "route": "chart",
-   "mainLen": 5296,
+   "mainLen": 7405,
    "breadcrumb": "病情一图秀"
   },
   {
@@ -43,8 +43,14 @@
   },
   {
    "profile": "A",
+   "route": "nutrition",
+   "mainLen": 4322,
+   "breadcrumb": "营养与生活"
+  },
+  {
+   "profile": "A",
    "route": "review",
-   "mainLen": 2617,
+   "mainLen": 3188,
    "breadcrumb": "复诊准备"
   },
   {
@@ -56,7 +62,7 @@
   {
    "profile": "A",
    "route": "course/timeline",
-   "mainLen": 4934,
+   "mainLen": 5067,
    "breadcrumb": "病程"
   },
   {
@@ -86,7 +92,7 @@
   {
    "profile": "A",
    "route": "records/panel",
-   "mainLen": 2871,
+   "mainLen": 2979,
    "breadcrumb": "记录与报告"
   },
   {
@@ -109,44 +115,38 @@
   },
   {
    "profile": "A",
-   "route": "trial/build",
-   "mainLen": 4076,
+   "route": "trial/match",
+   "mainLen": 13988,
    "breadcrumb": "临床研究线索"
   },
   {
    "profile": "A",
    "route": "trial/search",
-   "mainLen": 2971,
+   "mainLen": 8785,
    "breadcrumb": "临床研究线索"
   },
   {
    "profile": "A",
-   "route": "trial/chain",
-   "mainLen": 3669,
-   "breadcrumb": "临床研究线索"
-  },
-  {
-   "profile": "A",
-   "route": "trial/cand",
-   "mainLen": 2459,
+   "route": "trial/saved",
+   "mainLen": 2264,
    "breadcrumb": "临床研究线索"
   },
   {
    "profile": "B",
    "route": "home",
-   "mainLen": 15884,
+   "mainLen": 17734,
    "breadcrumb": "看板"
   },
   {
    "profile": "B",
    "route": "labs",
-   "mainLen": 13499,
+   "mainLen": 13637,
    "breadcrumb": "检查与指标"
   },
   {
    "profile": "B",
    "route": "chart",
-   "mainLen": 15819,
+   "mainLen": 14035,
    "breadcrumb": "病情一图秀"
   },
   {
@@ -163,8 +163,14 @@
   },
   {
    "profile": "B",
+   "route": "nutrition",
+   "mainLen": 4708,
+   "breadcrumb": "营养与生活"
+  },
+  {
+   "profile": "B",
    "route": "review",
-   "mainLen": 2654,
+   "mainLen": 3411,
    "breadcrumb": "复诊准备"
   },
   {
@@ -176,7 +182,7 @@
   {
    "profile": "B",
    "route": "course/timeline",
-   "mainLen": 34350,
+   "mainLen": 30537,
    "breadcrumb": "病程"
   },
   {
@@ -206,7 +212,7 @@
   {
    "profile": "B",
    "route": "records/panel",
-   "mainLen": 3632,
+   "mainLen": 3740,
    "breadcrumb": "记录与报告"
   },
   {
@@ -229,26 +235,20 @@
   },
   {
    "profile": "B",
-   "route": "trial/build",
-   "mainLen": 4264,
+   "route": "trial/match",
+   "mainLen": 14651,
    "breadcrumb": "临床研究线索"
   },
   {
    "profile": "B",
    "route": "trial/search",
-   "mainLen": 2967,
+   "mainLen": 8781,
    "breadcrumb": "临床研究线索"
   },
   {
    "profile": "B",
-   "route": "trial/chain",
-   "mainLen": 3665,
-   "breadcrumb": "临床研究线索"
-  },
-  {
-   "profile": "B",
-   "route": "trial/cand",
-   "mainLen": 2455,
+   "route": "trial/saved",
+   "mainLen": 2260,
    "breadcrumb": "临床研究线索"
   }
  ]

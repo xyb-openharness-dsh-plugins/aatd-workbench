@@ -32,7 +32,7 @@ const ROUTES = [
   'course/timeline', 'course/list',
   'records/lib', 'records/draft', 'records/archive', 'records/panel', 'records/summary',
   'mind/feel', 'mind/life',
-  'trial/build', 'trial/search', 'trial/chain', 'trial/cand'
+  'trial/match', 'trial/search', 'trial/saved'
 ];
 
 const ch = await launchChrome({ port: CDP_PORT });

@@ -239,10 +239,72 @@
 
   /* 一图秀与泳道的事件（用药 / 就诊 / 检查 / 缓解开始 / 加重）全部由上方事实表派生，不另立数据源。 */
 
-  /* ---------- 临床研究登记摘录（trial_demo）：登记状态与入排均为演示占位，非真实登记 ---------- */
+  /* ---------- 临床研究登记摘录（trial_demo）：
+   * 数据来自 research/aatd/trials.jsonl 的真实快照子集（2026-11-04 抓取，全量 147 条）。
+   * 只搬登记的结构化字段，不写进入排标准原文；intervention 为标题摘录（仅作标签，不进符合度分母）；
+   * 登记状态未核实、会过期，
+   * 入组资格与疗效判断一律以研究中心答复与官方登记页为准。 ---------- */
   const trial_demo = [
-    { id: 'DEMO-1', title: 'AATD 相关登记研究（合成示例）', status: '招募中（演示占位）', kind: '观察性', crit: '登记状态、入排条件均为演示占位文本，非真实登记；以研究中心答复为准。', url: 'https://clinicaltrials.gov/search?cond=Alpha-1%20Antitrypsin%20Deficiency' },
-    { id: 'DEMO-2', title: 'AATD 相关干预研究（合成示例）', status: '尚未招募（演示占位）', kind: '干预性', crit: '登记状态、入排条件均为演示占位文本，非真实登记；以研究中心答复为准。', url: 'https://clinicaltrials.gov/search?cond=Alpha-1%20Antitrypsin%20Deficiency' }
+    {
+      id: 'NCT05677971', nct: 'NCT05677971', title: 'Study to Check the Safety of Fazirsiran and Learn if Fazirsiran Can Help People With Liver Disease and Scarring (Fibrosis) Due to an Abnormal Version of Alpha-1 Antitrypsin Protein',
+      studyType: 'INTERVENTIONAL', status: 'RECRUITING', sponsor: ['Takeda'], dates: ['2023-03-06', '2029-01-17', '2031-12-12'],
+      intervention: 'Fazirsiran', snapshotDate: '2026-11-04', sourceUrl: 'https://clinicaltrials.gov/study/NCT05677971'
+    },
+    {
+      id: 'NCT06165341', nct: 'NCT06165341', title: 'Study to Learn About the Safety of Fazirsiran and if it Can Help People With Alpha-1 Antitrypsin Liver Disease With Mild Liver Scarring (Fibrosis)',
+      studyType: 'INTERVENTIONAL', status: 'RECRUITING', sponsor: ['Takeda'], dates: ['2024-03-01', '2028-08-26', '2028-08-26'],
+      intervention: 'Fazirsiran', snapshotDate: '2026-11-04', sourceUrl: 'https://clinicaltrials.gov/study/NCT06165341'
+    },
+    {
+      id: 'NCT07898553', nct: 'NCT07898553', title: 'AATD-Liver Scan Study',
+      studyType: 'OBSERVATIONAL', status: 'ENROLLING_BY_INVITATION', sponsor: ['Alpha-1 Foundation'], dates: ['2026-01-27', '2030-01-01', '2030-01-01'],
+      snapshotDate: '2026-11-04', sourceUrl: 'https://clinicaltrials.gov/study/NCT07898553'
+    },
+    {
+      id: 'NCT06505603', nct: 'NCT06505603', title: 'PiMZ Longitudinal Cohort (PiMZ Logic)',
+      studyType: 'OBSERVATIONAL', status: 'RECRUITING', sponsor: ['Columbia University'], dates: ['2025-05-30', '2029-02', '2029-02'],
+      snapshotDate: '2026-11-04', sourceUrl: 'https://clinicaltrials.gov/study/NCT06505603'
+    },
+    {
+      id: 'NCT05297812', nct: 'NCT05297812', title: 'Alpha-1 Antitrypsin Disease Cohort: Longitudinal Biomarker Study of Disease',
+      studyType: 'OBSERVATIONAL', status: 'ACTIVE_NOT_RECRUITING', sponsor: ['Columbia University'], dates: ['2022-03-23', '2027-01', '2027-01'],
+      snapshotDate: '2026-11-04', sourceUrl: 'https://clinicaltrials.gov/study/NCT05297812'
+    },
+    {
+      id: 'NCT06512454', nct: 'NCT06512454', title: 'A Study in Adults to Learn About Inherited Alpha-1 Antitrypsin Deficiency (AATD) and AATD Related Liver Problems',
+      studyType: 'OBSERVATIONAL', status: 'RECRUITING', sponsor: ['Takeda'], dates: ['2024-09-25', '2031-12-31', '2031-12-31'],
+      snapshotDate: '2026-11-04', sourceUrl: 'https://clinicaltrials.gov/study/NCT06512454'
+    },
+    {
+      id: 'NCT06389877', nct: 'NCT06389877', title: 'A Study to Evaluate the Safety and Efficacy of BEAM-302 in Adult Patients With Alpha-1 Antitrypsin Deficiency (AATD)',
+      studyType: 'INTERVENTIONAL', status: 'RECRUITING', sponsor: ['Beam Therapeutics Inc.'], dates: ['2024-06-19', '2028-05', '2030-05'],
+      intervention: 'BEAM-302', snapshotDate: '2026-11-04', sourceUrl: 'https://clinicaltrials.gov/study/NCT06389877'
+    },
+    {
+      id: 'NCT04157049', nct: 'NCT04157049', title: 'Alpha-1 Research Registry',
+      studyType: 'OBSERVATIONAL', status: 'RECRUITING', sponsor: ['Alpha-1 Foundation'], dates: ['2019-06-20', '2029-06-20', '2029-06-20'],
+      snapshotDate: '2026-11-04', sourceUrl: 'https://clinicaltrials.gov/study/NCT04157049'
+    },
+    {
+      id: 'NCT05335603', nct: 'NCT05335603', title: 'An Observational Study Evaluating Patients With Chronic Liver Diseases Associated With Hepatic Steatosis',
+      studyType: 'OBSERVATIONAL', status: 'RECRUITING', sponsor: ['University of Copenhagen'], dates: ['2020-08-24', '2036-08', '2036-08'],
+      snapshotDate: '2026-11-04', sourceUrl: 'https://clinicaltrials.gov/study/NCT05335603'
+    },
+    {
+      id: 'NCT06049082', nct: 'NCT06049082', title: 'A Study of KB408 for the Treatment of Alpha-1 Antitrypsin Deficiency',
+      studyType: 'INTERVENTIONAL', status: 'RECRUITING', sponsor: ['Krystal Biotech, Inc.'], dates: ['2024-02-15', '2025-12', '2026-12'],
+      intervention: 'KB408', snapshotDate: '2026-11-04', sourceUrl: 'https://clinicaltrials.gov/study/NCT06049082'
+    },
+    {
+      id: 'NCT01983241', nct: 'NCT01983241', title: 'Efficacy and Safety of Alpha1-Proteinase Inhibitor (Human), Modified Process (Alpha-1 MP) in Subjects With Pulmonary Emphysema Due to Alpha1 Antitrypsin Deficiency (AATD)',
+      studyType: 'INTERVENTIONAL', status: 'COMPLETED', sponsor: ['Grifols Therapeutics LLC'], dates: ['2014-04-01', '2026-07-07', '2026-08-05'],
+      intervention: 'Alpha-1 MP', snapshotDate: '2026-11-04', sourceUrl: 'https://clinicaltrials.gov/study/NCT01983241'
+    },
+    {
+      id: 'NCT07887347', nct: 'NCT07887347', title: 'A Study of the Safety and Efficacy of Prime Editing (PM647a) in Participants With Alpha-1 Antitrypsin Deficiency',
+      studyType: 'INTERVENTIONAL', status: 'NOT_YET_RECRUITING', sponsor: ['Prime Medicine, Inc.'], dates: ['2026-10', '2028-12', '2029-01'],
+      intervention: 'PM647a', snapshotDate: '2026-11-04', sourceUrl: 'https://clinicaltrials.gov/study/NCT07887347'
+    }
   ];
 
   /* ---------- 复诊准备示例问题（demo_prompts）：「加一个问题」按钮的预填文案，按档案取 ---------- */

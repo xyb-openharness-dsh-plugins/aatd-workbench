@@ -81,7 +81,7 @@ try {
     if (ball) ball.click();
     return JSON.stringify({ rangeButtons: btn.map(b => b.dataset.range), pathsBefore: before, pathsAfter3m: after, circlesBefore, circlesAfter });
   })()`));
-  check('C8-pre', '时间窗控件存在（近 3 月/近 1 年/全期）', Array.isArray(winInfo.rangeButtons) && winInfo.rangeButtons.length >= 2, JSON.stringify(winInfo.rangeButtons));
+  check('C8-pre', '时间窗控件存在（近 3 月/近 6 月/近 12 月/全部）', Array.isArray(winInfo.rangeButtons) && winInfo.rangeButtons.length >= 2, JSON.stringify(winInfo.rangeButtons));
   check('C8', '时间窗联动：切近 3 月后数据点减少（circle 数下降且非空前置）', winInfo.circlesBefore > 0 && winInfo.circlesAfter > 0 && winInfo.circlesAfter < winInfo.circlesBefore, `circles ${winInfo.circlesBefore} → ${winInfo.circlesAfter}`);
 
   /* C4 治疗节点开关不改曲线 */

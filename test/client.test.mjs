@@ -86,7 +86,7 @@ test('③ register 参数：标题、仓库、customFrame=true（否则顶栏没
   assert.equal(registered.repository, 'https://github.com/xyb-openharness-dsh-plugins/aatd-workbench');
   assert.equal(registered.customFrame, true);
   assert.equal(registered.embedded, true);
-  assert.equal(registered.version, '0.5.0');
+  assert.equal(registered.version, '0.6.0');
 });
 
 test('④ Panel：自绘 header（首子元素，带 macOS 避让）+ 业务 iframe 指向 /api/aatd/ui/ + 会话 aside + splitter', () => {

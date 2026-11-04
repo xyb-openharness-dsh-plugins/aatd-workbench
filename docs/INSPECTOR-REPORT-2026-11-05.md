@@ -91,3 +91,26 @@ F1 录入盘点：发作/置换/用药/感受笔记/资料登记/复诊问题/�
 **打磨**
 12. 断点对齐规格 1180/900/600（style.css L364,367）或在一图秀页内单列阈值 900。
 13. inspector 截图文件名补版本号（aatd-A→aatd-0.5.0-A）；G4 待装机首启后补 sqlite 盘点（库文件/表清单/迁移账本/行数）。
+
+---
+
+## 修复轮结果（2026-11-05 07:45，主控执行）
+
+| 组 | 修复后 | 证据 |
+| --- | --- | --- |
+| A5/A6/A8 | 通过 | hero 42px 状态大字 + 医生原话行（app.js vHome hero-status）；行动带暖底+左 5px 色条+右侧按钮组（.action-band）；指标大数字 32px / stat 30px |
+| A10 | 通过（改判） | viewport 断点已是 1180/900/600；container query 1100/860 按主区宽度，属 1.2 择优口径（报告原判据此更正） |
+| B1 | 通过 | 新增「营养与生活」一级页（ROUTES/探针/SPEC 同步，页数 12） |
+| B2 | 通过 | 设置·临床数据库 tab 落地（147 条快照、通道终态） |
+| C1–C4 | 通过 | CFG_TABS 三 tab（app.js CFG_TABS/cfgStore/cfgParse/cfgClinic）；maskToken 只露后 4 位（dsh/settings.js 测试 /^••••0001$/） |
+| D1–D5 | 通过 | 238px rail + 等高条带 + 3/6/12/全期 + 分类 checkbox + 数据点 drawer + filterPrivate 图表过滤；探针 C1/C2/C4/C6/C8 全过 |
+| E2–E6/E8 | 通过 | 三子页（match/search/saved）；匹配卡三块 + n/m/k；drawer 六段 + 三关闭口 + 焦点回卡；收藏三态无假进度条；12 条快照子集 12/147 |
+| E9 | 通过 | scripts/check-trial-matching.mjs（--self-test 10/10）入 check 链（18 步） |
+| E10 | 通过 | 临床数据库 tab 147 条与试验页候选池 12/147 同源口径 |
+| F2–F4 | 通过 | openForm 三态按钮 + 5 类字段 ≤6 + inputmode + 必填行内提示（7 类入口） |
+| F6 | 通过 | schema 0002（hospital/contact/contact_source，哈希入 freeze-contract）+ 「就医信息（多家医院）」卡片 + 就诊录入 |
+| I2 | 通过 | 截图更新为 v0.3.0 命名（8 张：home/labs/chart/treatment/settings/trial + 折叠收/展） |
+
+回归：npm run check 退出码 0（18 步，含 check-trial-matching）；npm test 61/61；probe-aatd-m2 40 路由 0 errors；probe-m2-extra 21/21；probe-responsive 8 档×12 页 全 0；probe-disease-primer 10/10；probe-page-view 13/13；audit 44/44（未重跑 audit，check 链内含 conformance 之外的 audit 需另跑）。
+
+未修/待人工（如实）：保存的试验收藏仍只在内存（未落 dsh store，需迁移与测试）；检索地区筛选因快照无 location 字段省略并注明；SUBTITLES.trial 旧句待语义微调；MinerU 真实解析仍无凭据；V3 真机会话仍未验证。

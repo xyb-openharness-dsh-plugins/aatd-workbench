@@ -47,6 +47,12 @@
     "vertical": [],
     "clipped": []
   },
+  "1300/nutrition": {
+    "bodyScrollW": 1300,
+    "innerW": 1300,
+    "vertical": [],
+    "clipped": []
+  },
   "1300/trial/search": {
     "bodyScrollW": 1300,
     "innerW": 1300,
@@ -108,6 +114,12 @@
     "clipped": []
   },
   "1180/family": {
+    "bodyScrollW": 1180,
+    "innerW": 1180,
+    "vertical": [],
+    "clipped": []
+  },
+  "1180/nutrition": {
     "bodyScrollW": 1180,
     "innerW": 1180,
     "vertical": [],
@@ -179,6 +191,12 @@
     "vertical": [],
     "clipped": []
   },
+  "1000/nutrition": {
+    "bodyScrollW": 1000,
+    "innerW": 1000,
+    "vertical": [],
+    "clipped": []
+  },
   "1000/trial/search": {
     "bodyScrollW": 1000,
     "innerW": 1000,
@@ -240,6 +258,12 @@
     "clipped": []
   },
   "940/family": {
+    "bodyScrollW": 940,
+    "innerW": 940,
+    "vertical": [],
+    "clipped": []
+  },
+  "940/nutrition": {
     "bodyScrollW": 940,
     "innerW": 940,
     "vertical": [],
@@ -311,6 +335,12 @@
     "vertical": [],
     "clipped": []
   },
+  "900/nutrition": {
+    "bodyScrollW": 900,
+    "innerW": 900,
+    "vertical": [],
+    "clipped": []
+  },
   "900/trial/search": {
     "bodyScrollW": 900,
     "innerW": 900,
@@ -372,6 +402,12 @@
     "clipped": []
   },
   "780/family": {
+    "bodyScrollW": 780,
+    "innerW": 780,
+    "vertical": [],
+    "clipped": []
+  },
+  "780/nutrition": {
     "bodyScrollW": 780,
     "innerW": 780,
     "vertical": [],
@@ -443,6 +479,12 @@
     "vertical": [],
     "clipped": []
   },
+  "700/nutrition": {
+    "bodyScrollW": 700,
+    "innerW": 700,
+    "vertical": [],
+    "clipped": []
+  },
   "700/trial/search": {
     "bodyScrollW": 700,
     "innerW": 700,
@@ -504,6 +546,12 @@
     "clipped": []
   },
   "600/family": {
+    "bodyScrollW": 600,
+    "innerW": 600,
+    "vertical": [],
+    "clipped": []
+  },
+  "600/nutrition": {
     "bodyScrollW": 600,
     "innerW": 600,
     "vertical": [],

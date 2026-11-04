@@ -2,6 +2,17 @@
 
 只增不删；每条写清"改了什么 + 为什么 + 用户可见结果"。版本号与 VERSION、package.json 三处必须一致。
 
+## 0.6.0（2026-11-05，FAMILY-INSPECTOR 修复轮；原型 v0.3.0）
+
+- 设置面板重构为三 tab：工作区（目录示意/体积 tile/备份/拒绝口径）、文档解析（MinerU：同意勾选、Token 只露后 4 位、pipeline 固定、10MB/20 页、如实标注「未接入、保存不联网」）、临床数据库（147 条快照、通道终态 FAILED 原话、与试验页同源）。
+- 新增通用录入窗（三态按钮：保存并继续录入 / 保存并关闭 / 取消；字段 ≤6、inputmode、必填行内提示）：加重、输注、感受、问题、家系原话、体重、就诊 7 类入口。
+- 试验线改三子页（匹配 / 检索 / 收藏与跟踪）：匹配卡三块（分数方块 + 登记元信息 + 硬性标签，n/m/k 固定行）、可对照项 <2 不算百分数、干预不进分母、右侧 drawer 六段固定顺序 + 三关闭口、收藏本机三态且无假进度条；新增 scripts/check-trial-matching.mjs（自测 10/10）入 check 链。
+- 一图秀改 238px rail 双栏 + 等高条带（每序列独立归一化）+ 时间 3/6/12/全期 + 分类指标 checkbox（色点/最近值）+ 数据点开报告 drawer + 私密 N 条不含。
+- 新增「营养与生活」一级页（当下困扰 / 体重按次记录与较上次 / 复查节律不推算）；体重指标进演示数据（A 1 条 / B 5 条）。
+- schema 0002：visits 增 hospital / contact / contact_source（可空；多家医院卡片 + 就诊录入）。
+- A 组层级：hero 42px 状态大字 + 医生原话行、暖底左 5px 色条行动带、指标大数字 ≥30px。
+- 版本：原型 v0.3.0 / 包 0.6.0（十处同源）；README 截图刷新为 v0.3.0 命名。
+
 ## 0.5.0 — 2026-11-05（开发版 · M5 七步移植）
 
 - 开发版页面：`public/`（index.html / app.js / style.css / primer-data.js / demo-data.js）以 prototypes/v0.2 为基准生成——结构文案逐字符对齐，数据源换成宿主 API（`GET /api/aatd/bootstrap`，拿不到才回退演示）；逐条差异见 `docs/UI-PARITY-NOTES.md`，断言在 `test/ui-parity.test.mjs`（9 条）。

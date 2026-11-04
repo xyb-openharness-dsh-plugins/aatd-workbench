@@ -1,6 +1,6 @@
 {
   "name": "@xyb-community/aatd-workbench",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "服务α1-抗胰蛋白酶缺乏症患者及家属的本机信息整理与就诊准备工作台，分开保存本人/代记症状、肺功能与肝功能报告原文、每周加强治疗输注记录和医生答复，不输出诊断、风险或处置判断。",
   "private": true,
   "type": "module",
@@ -28,7 +28,7 @@
     "build:version": "node scripts/build-version.mjs",
     "build:client": "node scripts/build-client.mjs",
     "build:demo": "node scripts/build-demo-copy.mjs",
-    "check": "node scripts/build-version.mjs && node --check dsh/index.js && node --check lib/client.js && node scripts/build-client.mjs --check && node scripts/check-schema.mjs && node scripts/build-demo-copy.mjs --check && node scripts/check-workbench-package.mjs . && node scripts/check-host-contract.mjs && node scripts/smoke-activate.mjs && node scripts/check-probe-coverage.mjs && node scripts/check-version-literal.mjs && node scripts/check-static-refs.mjs && node scripts/check-choice-limit.mjs && node scripts/check-assertion-strength.mjs && node scripts/check-derivative-leftovers.mjs . && node scripts/check-trial-snapshot.mjs . --if-present && node scripts/check-wording.mjs && node --test test/*.test.mjs && node scripts/check-primer-links.mjs",
+    "check": "node scripts/build-version.mjs && node --check dsh/index.js && node --check lib/client.js && node scripts/build-client.mjs --check && node scripts/check-schema.mjs && node scripts/build-demo-copy.mjs --check && node scripts/check-workbench-package.mjs . && node scripts/check-host-contract.mjs && node scripts/smoke-activate.mjs && node scripts/check-probe-coverage.mjs && node scripts/check-version-literal.mjs && node scripts/check-static-refs.mjs && node scripts/check-choice-limit.mjs && node scripts/check-assertion-strength.mjs && node scripts/check-derivative-leftovers.mjs . && node scripts/check-trial-snapshot.mjs . --if-present && node scripts/check-trial-matching.mjs . && node scripts/check-wording.mjs && node --test test/*.test.mjs && node scripts/check-primer-links.mjs",
     "check:schema": "node scripts/check-schema.mjs",
     "check:version-literal": "node scripts/check-version-literal.mjs",
     "check:host": "node scripts/check-host-contract.mjs",

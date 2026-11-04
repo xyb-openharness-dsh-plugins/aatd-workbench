@@ -28,26 +28,26 @@
 ## 关键功能（截图墙）
 
 ### 看板：最近记录、待核对与想问医生的问题，一屏还原
-![看板](docs/assets/screenshots/aatd-v0.2.0-home-A.png)
+![看板](docs/assets/screenshots/aatd-v0.3.0-home-A.png)
 刚确诊的档案 A：记录少、未知多，缺失项显式留空，不冒充有数据。
 
 ### 检查与指标：肺功能、肝功能分节，不同方法不合并
-![检查与指标](docs/assets/screenshots/aatd-v0.2.0-labs-B.png)
+![检查与指标](docs/assets/screenshots/aatd-v0.3.0-labs-B.png)
 每张指标卡带方法/单位/机构可比组；「较上次」不画升降箭头，不暗示好坏。
 
 ### 病情一图秀：化验、发作—缓解与输注放回同一段时间
-![一图秀](docs/assets/screenshots/aatd-v0.2.0-chart-B.png)
+![一图秀](docs/assets/screenshots/aatd-v0.3.0-chart-B.png)
 曲线按各自全期归一化，区间带与数据点分层；跨方法断开不连线。
 
 ### 输注与治疗：按周登记、按次计次，漏了哪周就空着哪周
-![输注与治疗](docs/assets/screenshots/aatd-v0.2.0-treatment-B.png)
+![输注与治疗](docs/assets/screenshots/aatd-v0.3.0-treatment-B.png)
 折叠卡按「一次发作 / 一次调药」分组（details 原生折叠，可打印全展开）。
 
 ### 折叠卡收起态
-![折叠收起](docs/assets/screenshots/aatd-v0.2.0-fold-closed.png)
+![折叠收起](docs/assets/screenshots/aatd-v0.3.0-fold-closed.png)
 
 ### 折叠卡展开态
-![折叠展开](docs/assets/screenshots/aatd-v0.2.0-fold-open.png)
+![折叠展开](docs/assets/screenshots/aatd-v0.3.0-fold-open.png)
 
 ## 怎么用
 
