@@ -1,0 +1,6 @@
+- insert:
+    - id: aatd-main
+      name: "@xyb-community/aatd-workbench"
+      # 注：config.root 指向 DSH 家目录下的 aatd 工作台数据目录
+      config:
+        root: !!js dshHomePath('aatd')
