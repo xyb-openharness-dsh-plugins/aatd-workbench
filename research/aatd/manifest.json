@@ -1,0 +1,39 @@
+{
+ "snapshot_date": "2026-11-04",
+ "query": "alpha-1 antitrypsin deficiency",
+ "recordCount": 147,
+ "dbCount": 147,
+ "sourceStatusRows": 4,
+ "source": {
+  "id": "ctgov",
+  "totalCount": 147,
+  "fetched_at": "2026-11-04T17:16:25.263Z"
+ },
+ "files": {
+  "trials.jsonl": {
+   "sha256": "84779e032932b42b7713bed268855bbc622742917d3656c408533aa7102b3f79",
+   "bytes": 69788,
+   "records": 147
+  },
+  "trials.sqlite": {
+   "sha256": "bd6284362d174565d737794e8df3d6b2ce3e11483c6f8479624dfeb4d84d77e5",
+   "bytes": 65536,
+   "records": 147
+  }
+ },
+ "field_map": {
+  "recordId": "record_id",
+  "mergedSources": "merged_sources",
+  "sourceId": "source_id",
+  "title": "title",
+  "studyType": "study_type",
+  "sponsor": "sponsors",
+  "registryNumbers": "registry_numbers",
+  "dates": "dates",
+  "sourceUrl": "source_url",
+  "retrievedAt": "retrieved_at",
+  "statusNote": "status_note",
+  "snapshotDate": "snapshot_date"
+ },
+ "caveat": "登记状态不等于入组资格，也不构成疗效结论；中国两通道未开放 API，尝试记录见 cn-registry-attempt.json 与 source_statuses 表"
+}

@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-11-04T17:16:27.268Z",
+  "note": "这些平台没有开放 API；本文件只记录\"查过、结果如何\"，不复制站点内容。未查过或服务失败时不能写零结果。",
+  "results": [
+    {
+      "id": "chinadrugtrials",
+      "name": "国家药监局药物临床试验登记与信息公示平台",
+      "url": "https://www.chinadrugtrials.org.cn/clinicaltrials.searchlist.dhtml?keywords=%E6%8A%97%E8%83%B0%E8%9B%8B%E7%99%BD%E9%85%B6%E7%BC%BA%E4%B9%8F%E7%97%87",
+      "startedAt": "2026-11-04T17:16:25.303Z",
+      "status": 202,
+      "bytes": 25648,
+      "blockedReason": null,
+      "collectable": false
+    },
+    {
+      "id": "chictr",
+      "name": "中国临床试验注册中心（ChiCTR）",
+      "url": "https://www.chictr.org.cn/searchproj.html?title=%E6%8A%97%E8%83%B0%E8%9B%8B%E7%99%BD%E9%85%B6%E7%BC%BA%E4%B9%8F%E7%97%87",
+      "startedAt": "2026-11-04T17:16:25.677Z",
+      "status": 405,
+      "bytes": 2657,
+      "blockedReason": "HTTP 405",
+      "collectable": false
+    },
+    {
+      "id": "ictrp",
+      "name": "WHO ICTRP 检索入口",
+      "url": "https://trialsearch.who.int/",
+      "startedAt": "2026-11-04T17:16:25.789Z",
+      "status": 200,
+      "bytes": 36376,
+      "blockedReason": null,
+      "collectable": false
+    }
+  ]
+}
