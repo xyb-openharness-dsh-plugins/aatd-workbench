@@ -190,6 +190,17 @@ try {
   })()`));
   check('Q13', '界面标注「合成示例/仅演示」+ 未连接宿主', demoLabels.demo === true && demoLabels.host === true, JSON.stringify(demoLabels));
 
+  /* ---------- 私密三出口泄漏断言（Q35，固化自 2026-11-05 评审 P1④） ---------- */
+  await go('home');
+  await cdp.eval("document.getElementById('agent-toggle').click()"); await sleep(150);
+  const homeAi = await cdp.eval("[document.getElementById('main').textContent, document.getElementById('agent-body').textContent].join(' ')");
+  await go('review');
+  const reviewText = await cdp.eval("document.getElementById('main').textContent");
+  const secrets = ['还没敢跟爸妈提这个病的事', '要是早点戒烟', '还没跟孩子说这次住院的事', '老周半夜又咳醒了'];
+  const allText = String(homeAi || '') + ' ' + String(reviewText || '');
+  const leaked = secrets.filter((x) => allText.includes(x));
+  check('Q35-fix', '私密原话 0 泄漏（看板+AI 面板+复诊准备导出预览三处抽查）', leaked.length === 0 && secrets.length === 4, `泄漏 ${leaked.length} 条${leaked.length ? '：' + leaked.join(';') : ''}`);
+
   await shot(join(SHOTS, 'final.png'));
 } catch (err) {
   check('CRASH', '探针执行', false, err.message);
