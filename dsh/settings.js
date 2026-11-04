@@ -54,8 +54,9 @@ export function displayPath(file, home = homedir()) {
 /** 只露前 4 位与后 2 位，用于"到底用的哪把 key"的排查，不可反推。 */
 export function maskToken(token) {
   if (!token) return ''
-  if (token.length <= 8) return '****'
-  return `${token.slice(0, 4)}****${token.slice(-2)}`
+  /* 评审 C3 口径：只显示后 4 位，不露前缀 */
+  if (token.length <= 4) return '••••'
+  return `••••${token.slice(-4)}`
 }
 
 /**

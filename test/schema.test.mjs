@@ -1,7 +1,7 @@
 /* M3 断言：schema/0001_initial.sql 内存全建；无判读列；关键契约列在位。 */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,9 +9,11 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 const build = () => {
-  const sql = readFileSync(join(ROOT, 'schema', '0001_initial.sql'), 'utf8');
+  /* 按迁移账本顺序全建（0001 初始 + 0002…；迁移只增不改，逻辑同 dsh/store.js） */
   const db = new DatabaseSync(':memory:');
-  db.exec(sql);
+  for (const f of readdirSync(join(ROOT, 'schema')).filter((x) => /^\d{4}_.*\.sql$/.test(x)).sort()) {
+    db.exec(readFileSync(join(ROOT, 'schema', f), 'utf8'));
+  }
   return db;
 };
 
@@ -57,6 +59,12 @@ test('契约列在位：is_private / in_use / corrected_by / author_role', () =>
   assert.ok(colsOf('metric_records').includes('in_use') && colsOf('metric_records').includes('corrected_by'), 'metric_records 缺版本链列');
   assert.ok(colsOf('metric_defs').includes('comparable_key'), 'metric_defs 缺 comparable_key（方法/单位/机构可比组）');
   assert.ok(colsOf('section_titles').includes('title') && !colsOf('profiles').some((c) => c.endsWith('_title')), '分节标题必须表化，不用 *_title 列');
+});
+
+test('0002：visits 支持多家医院（hospital/contact 可空列）', () => {
+  const db = build();
+  const cols = db.prepare('PRAGMA table_info(visits)').all().map((c) => c.name);
+  for (const c of ['hospital', 'contact', 'contact_source']) assert.ok(cols.includes(c), `visits 缺列 ${c}`);
 });
 
 test('私密默认值：family_lines.is_private 缺省 1', () => {

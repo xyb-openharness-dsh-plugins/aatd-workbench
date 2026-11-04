@@ -23,7 +23,7 @@ mkdirSync(SHOTS, { recursive: true });
 const CDP_PORT = Number(process.env.AATD_RESP_CDP_PORT || 9363);
 const WIDTHS = (process.env.AATD_RESP_WIDTHS || '1300,1180,1000,940,900,780,700,600').split(',').map(Number);
 /* 抽样页：一级页 + 三张新组件页（泳道/一图秀/输注折叠卡）——M2 硬要求 */
-const PAGES = (process.env.AATD_RESP_PAGES || 'home,records/panel,records/summary,course/timeline,treatment,labs,chart,family,trial/search,mind/feel,review').split(',');
+const PAGES = (process.env.AATD_RESP_PAGES || 'home,records/panel,records/summary,course/timeline,treatment,labs,chart,family,nutrition,trial/search,mind/feel,review').split(',');
 const URL_APP = `file://${join(ROOT, 'prototypes', 'v0.2', 'index.html')}`;
 
 /* 页内扫描：返回竖排/溢出嫌疑元素。规则写在一处，页面里也照这个跑。 */

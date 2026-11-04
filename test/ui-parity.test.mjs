@@ -51,7 +51,7 @@ test('③ 11 个一级页与子页签：两边完全一致', () => {
     assert.equal(block(shipped, name), block(proto, name), `${name} 与原型不一致`);
   }
   const pages = [...proto.matchAll(/\['([a-z]+)', '[^']+', '[a-z]+'\]/g)].map((m) => m[1]);
-  assert.equal(new Set(pages).size, 11, '一级页 11 个（SPEC 页表）');
+  assert.equal(new Set(pages).size, 12, '一级页 12 个（SPEC 页表：含营养与生活）');
 });
 
 test('④ 样式表与原型逐字节一致（改视觉先改原型，再同步过来）', () => {

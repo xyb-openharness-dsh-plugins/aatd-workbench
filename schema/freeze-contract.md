@@ -14,3 +14,9 @@
   7. episodes：发作—缓解区间，「第 N 天/距上次 N 天」读时算；
   8. family_lines.is_private 缺省 1；私密三出口共用过滤，改写链上任一私密版本则旧原文不出口。
 - 验证：test/schema.test.mjs 9/9（内存全建、禁判读列、契约列、私密默认、rowid 读写冒烟）。
+
+## 0002（2026-11-05 追加，INSPECTOR F6）
+
+- 文件：0002_visits_hospital.sql
+- sha256：4044e9d07ff7d26a5889c3ba0dfd52d9a4b7f748261cf2bb4adecccde5c6f336
+- 变更：visits 增可空列 hospital / contact / contact_source（多家医院卡片用）；旧行 NULL 保留。

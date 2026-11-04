@@ -4,8 +4,8 @@
 
 ## 页面清单与覆盖（IP2/X1）
 
-view/sub 全集（10 视图）：home、course、records、labs、chart、treatment、family、mind、review、settings；
-sub：course/timeline、course/list、records/lib、records/draft、records/archive、records/panel、records/summary、mind/feel、mind/life；
+view/sub 全集（12 视图）：home、course、records、labs、chart、treatment、family、mind、nutrition、trial、review、settings；
+sub：course/timeline、course/list、records/lib、records/draft、records/archive、records/panel、records/summary、mind/feel、mind/life、trial/match、trial/search、trial/saved；
 整页视图 page-* 与疾病概要 primer 不计一级页。
 
 | 路径 | 场景 | 入口（逐字） | 步骤 | 可观察产物 | 回首页 |
@@ -22,7 +22,9 @@ sub：course/timeline、course/list、records/lib、records/draft、records/arch
 | P-10 | 疾病概要 | 「?」 | 顶栏 ? → 四段概要 → 返回 | history +1 / back 收起，焦点回触发按钮 | — |
 | P-11 | AI 候选 | 「和 AI 讨论」 | 任一页点「和 AI 讨论」→ 输入框带上下文 | 输入框有文案、不自动发送 | — |
 | P-12 | 心理记录 | 「心理与生活」 | 打开 mind → 「当下感受」→ 选感受条目 | 双主体条目出现（本人/家属可切换） | 同上 |
-| P-13 | 一图秀窗口 | 「病情一图秀」 | chart → 切时间窗 → 切「关治疗节点」 | 首刻度=窗口首月、点数减少；path 不变 | 同上 |
+| P-13 | 一图秀窗口 | 「病情一图秀」 | chart → rail 切时间窗 → 切「关治疗节点」 | 首刻度=窗口首月、点数减少；path 不变 | 同上 |
+| P-14 | 营养记录 | 「营养与生活」 | nutrition → 「记一次体重」→ 保存并继续录入 | 列表新增，较上次更新 | 同上 |
+| P-15 | 试验匹配 | 「临床研究线索」 | trial → 匹配 → 点匹配卡 → 浮窗 → Esc | 右侧浮窗、焦点回触发卡、hash 不变 | 同上 |
 
 ## 通道一致性（IP5/IP9/X3）
 

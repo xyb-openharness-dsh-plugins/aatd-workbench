@@ -39,6 +39,8 @@
     { id: nid(), profile_key: 'A', key: 'fev1_a', name: 'FEV1 占预计值 %（肺功能室）', group_key: 'lung', unit: '%', unit_note: '单位形态【待核】', comparable_key: 'spiro-A', ord: 2 },
     { id: nid(), profile_key: 'A', key: 'alt_a', name: 'ALT（IFCC 法）', group_key: 'liver', unit: 'U/L', comparable_key: 'ifcc-A', ord: 3 },
     { id: nid(), profile_key: 'A', key: 'ggt_a', name: 'GGT（IFCC 法）', group_key: 'liver', unit: 'U/L', comparable_key: 'ifcc-A', ord: 4 },
+    /* 体重（家用秤）：不在肺/肝两个化验分组里，只给「营养与生活」页用；不做任何判读 */
+    { id: nid(), profile_key: 'A', key: 'weight_a', name: '体重（家用秤）', group_key: 'body', unit: 'kg', unit_note: '单位形态【待核】', comparable_key: 'home-scale', ord: 5 },
     /* 档案 B · 老周：肺功能两组（省医院体描仪 / 社区便携仪），跨组不合并 */
     { id: nid(), profile_key: 'B', key: 'fev1_b1', name: 'FEV1 占预计值 %（省人民医院 · 体描仪）', group_key: 'lung', unit: '%', unit_note: '单位形态【待核】', comparable_key: 'spiro-bodybox', ord: 1 },
     { id: nid(), profile_key: 'B', key: 'fev1_b2', name: 'FEV1 占预计值 %（社区卫生服务中心 · 便携仪）', group_key: 'lung', unit: '%', unit_note: '单位形态【待核】', comparable_key: 'spiro-portable', ord: 2 },
@@ -46,7 +48,9 @@
     { id: nid(), profile_key: 'B', key: 'aat_b1', name: '血清 AAT 浓度（免疫比浊法）', group_key: 'lung', unit: 'mg/dL', comparable_key: 'serum-immunoturbid', ord: 4 },
     { id: nid(), profile_key: 'B', key: 'aat_b2', name: '血清 AAT 浓度（散射比浊法）', group_key: 'lung', unit: 'mg/dL', comparable_key: 'serum-nephelometry', ord: 5 },
     { id: nid(), profile_key: 'B', key: 'alt_b', name: 'ALT（IFCC 法）', group_key: 'liver', unit: 'U/L', comparable_key: 'ifcc-general', ord: 6 },
-    { id: nid(), profile_key: 'B', key: 'ggt_b', name: 'GGT（IFCC 法）', group_key: 'liver', unit: 'U/L', comparable_key: 'ifcc-general', ord: 7 }
+    { id: nid(), profile_key: 'B', key: 'ggt_b', name: 'GGT（IFCC 法）', group_key: 'liver', unit: 'U/L', comparable_key: 'ifcc-general', ord: 7 },
+    /* 体重（家用秤）：不在肺/肝两个化验分组里，只给「营养与生活」页用；不做任何判读 */
+    { id: nid(), profile_key: 'B', key: 'weight_b', name: '体重（家用秤）', group_key: 'body', unit: 'kg', unit_note: '单位形态【待核】', comparable_key: 'home-scale', ord: 8 }
   ];
   const defId = (key) => metric_defs.find((d) => d.key === key).id;
 
@@ -86,7 +90,9 @@
     /* 档案 A：全档案只有 1 条数值记录（单点，图上只画 circle 不连线）；
        另 1 条文本记录连日期都记不清（measured_on=null）——缺失就这样留着 */
     { id: nid(), profile_key: 'A', metric_id: defId('aat_a'), value_num: 28, value_text: null, measured_on: '2026-10-08', source_kind: 'report', source_ref: 'r-a1', is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-10-09' },
-    { id: nid(), profile_key: 'A', metric_id: defId('alt_a'), value_num: null, value_text: '化验单原件没拿到，数值记不清了，等原件到了再核', measured_on: null, source_kind: 'manual', source_ref: null, is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-10-12' }
+    { id: nid(), profile_key: 'A', metric_id: defId('alt_a'), value_num: null, value_text: '化验单原件没拿到，数值记不清了，等原件到了再核', measured_on: null, source_kind: 'manual', source_ref: null, is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-10-12' },
+    /* 体重：A 只有 1 次（早饭前家用秤）；B 是多年记录 */
+    { id: nid(), profile_key: 'A', metric_id: defId('weight_a'), value_num: 61.5, value_text: null, measured_on: '2026-10-20', source_kind: 'manual', source_ref: null, is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-10-20' }
   ];
   /* 档案 B：多年多点 */
   [['2019-06-12', 58], ['2020-03-17', 55], ['2021-05-20', 52], ['2022-06-09', 49],
@@ -106,6 +112,9 @@
     metric_records.push({ id: nid(), profile_key: 'B', metric_id: defId('alt_b'), value_num: p[1], value_text: null, measured_on: p[0], source_kind: 'report', source_ref: 'r-b5', is_private: 0, in_use: 1, corrected_by: null, created_at: p[0] }));
   [['2019-06-12', 28], ['2024-06-06', 47], ['2026-09-18', 55]].forEach((p) =>
     metric_records.push({ id: nid(), profile_key: 'B', metric_id: defId('ggt_b'), value_num: p[1], value_text: null, measured_on: p[0], source_kind: 'report', source_ref: 'r-b5', is_private: 0, in_use: 1, corrected_by: null, created_at: p[0] }));
+  /* 体重（家用秤）：B 多年记录，只给「营养与生活」页展示，不参与肺/肝分组 */
+  [['2019-07-02', 68.5], ['2021-06-15', 66.2], ['2023-05-08', 64.8], ['2025-07-21', 63.1], ['2026-10-02', 62.4]].forEach((p) =>
+    metric_records.push({ id: nid(), profile_key: 'B', metric_id: defId('weight_b'), value_num: p[1], value_text: null, measured_on: p[0], source_kind: 'manual', source_ref: null, is_private: 0, in_use: 1, corrected_by: null, created_at: p[0] }));
   /* 更正链演示：2023-04 的一次 ALT 曾抄成 51，后来核对改成 41——
      旧版本 in_use=0 保留、corrected_by 指向新记录；不覆盖、不删除。 */
   {
@@ -135,14 +144,14 @@
 
   /* ---------- 就诊（visits） ---------- */
   const visits = [
-    { id: nid(), profile_key: 'A', dept: '呼吸科', visited_on: '2026-09-28', purpose: '咳嗽加重，第一次查血清 AAT', note_ref: noteA1, is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-09-28' },
-    { id: nid(), profile_key: 'A', dept: '呼吸科', visited_on: '2026-10-12', purpose: '复诊：开吸入药，安排基因分型', note_ref: noteA3, is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-10-12' },
-    { id: nid(), profile_key: 'B', dept: '呼吸科', visited_on: '2020-11-03', purpose: '第一次加重住院', note_ref: null, is_private: 0, in_use: 1, corrected_by: null, created_at: '2020-11-03' },
-    { id: nid(), profile_key: 'B', dept: '呼吸科', visited_on: '2023-02-07', purpose: '第二次加重，门诊处理', note_ref: null, is_private: 0, in_use: 1, corrected_by: null, created_at: '2023-02-07' },
-    { id: nid(), profile_key: 'B', dept: '呼吸科', visited_on: '2026-07-14', purpose: '急性加重，定行动计划', note_ref: noteBPlan, is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-07-14' },
-    { id: nid(), profile_key: 'B', dept: '呼吸科', visited_on: '2026-05-14', purpose: '年度肺功能（含弥散）', note_ref: null, is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-05-14' },
-    { id: nid(), profile_key: 'B', dept: '肝病科', visited_on: '2026-09-18', purpose: '肝功能年度复查', note_ref: noteBLiver, is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-09-18' },
-    { id: nid(), profile_key: 'B', dept: '呼吸科', visited_on: '2026-10-20', purpose: '这次发作的门诊', note_ref: noteBFlare, is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-10-20' }
+    { id: nid(), profile_key: 'A', dept: '呼吸科', visited_on: '2026-09-28', purpose: '咳嗽加重，第一次查血清 AAT', note_ref: noteA1, hospital: '市第一人民医院', contact: '门诊三楼呼吸内科；电话以挂号页为准', contact_source: '患者口述', is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-09-28' },
+    { id: nid(), profile_key: 'A', dept: '呼吸科', visited_on: '2026-10-12', purpose: '复诊：开吸入药，安排基因分型', note_ref: noteA3, hospital: '市第一人民医院', contact: '门诊三楼呼吸内科；电话以挂号页为准', contact_source: '患者口述', is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-10-12' },
+    { id: nid(), profile_key: 'B', dept: '呼吸科', visited_on: '2020-11-03', purpose: '第一次加重住院', note_ref: null, hospital: '省人民医院', contact: '住院部 12 楼（床位以住院单为准）', contact_source: '出院小结', is_private: 0, in_use: 1, corrected_by: null, created_at: '2020-11-03' },
+    { id: nid(), profile_key: 'B', dept: '呼吸科', visited_on: '2023-02-07', purpose: '第二次加重，门诊处理', note_ref: null, hospital: '省人民医院', contact: '呼吸科门诊；电话以挂号页为准', contact_source: '患者口述', is_private: 0, in_use: 1, corrected_by: null, created_at: '2023-02-07' },
+    { id: nid(), profile_key: 'B', dept: '呼吸科', visited_on: '2026-07-14', purpose: '急性加重，定行动计划', note_ref: noteBPlan, hospital: '省人民医院', contact: '呼吸科门诊；电话以挂号页为准', contact_source: '患者口述', is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-07-14' },
+    { id: nid(), profile_key: 'B', dept: '呼吸科', visited_on: '2026-05-14', purpose: '年度肺功能（含弥散）', note_ref: null, hospital: '省人民医院', contact: '肺功能室（门诊楼二层）', contact_source: '检查单', is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-05-14' },
+    { id: nid(), profile_key: 'B', dept: '肝病科', visited_on: '2026-09-18', purpose: '肝功能年度复查', note_ref: noteBLiver, hospital: '省人民医院', contact: '肝病科门诊；电话以挂号页为准', contact_source: '患者口述', is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-09-18' },
+    { id: nid(), profile_key: 'B', dept: '呼吸科', visited_on: '2026-10-20', purpose: '这次发作的门诊', note_ref: noteBFlare, hospital: '社区卫生服务中心', contact: null, contact_source: null, is_private: 0, in_use: 1, corrected_by: null, created_at: '2026-10-20' }
   ];
   const visitA1 = visits[0].id, visitBOpen = visits[7].id;
 

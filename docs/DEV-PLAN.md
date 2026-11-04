@@ -47,3 +47,10 @@
 | G3 | ⏳ | — | — |
 | V1 | ⏳ | — | — |
 | V2/V3 | ⏳ | — | — |
+
+## INSPECTOR 修复轮（2026-11-05，FAMILY-INSPECTOR）
+
+- 审查报告：docs/INSPECTOR-REPORT-2026-11-05.md（27 失败 / 2 待人工）。
+- 已修：C1–C4 设置三 tab（工作区/文档解析 MinerU/临床数据库，token 只露后 4 位）；F2–F4 通用录入窗（三态按钮、≤6 字段、inputmode、必填提示，5 类入口）；B1 营养与生活页（体重按次记录，不判读）；A5/A6/A8（42px 状态大字、暖底左条行动带、指标大数字 ≥30px）；A10 改判（viewport 断点已为 1180/900/600，container query 按主区宽度属 1.2 择优）；F6 schema 0002（visits + hospital/contact/contact_source）与演示数据多家医院。
+- 进行中：D1–D5 一图秀 rail 双栏 + E2–E6/E8/E10 试验匹配层（专项代理）。
+- 版本：0.5.0 → 0.3.0 原型轮次（原型 v0.3.0 / 开发版随升）。

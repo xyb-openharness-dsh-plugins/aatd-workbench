@@ -246,7 +246,7 @@ test('⑧ MinerU 设置接口：GET 状态只给掩码不给原文；POST 保存
     assert.equal(existsSync(secretFile), true, 'token 落在指定密钥文件');
     assert.ok(readFileSync(secretFile, 'utf8').includes('sk-aatd-test-token-0001'));
     assert.ok(!JSON.stringify(status).includes('sk-aatd-test-token-0001'), '状态接口绝不回 token 原文');
-    assert.match(status.masked, /sk-a\*\*\*\*01/);
+    assert.match(status.masked, /^••••0001$/, '只显示后 4 位，不露前缀');
 
     const clear = await fetch(`${base}/settings/mineru`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'clear' }) });
     assert.equal((await clear.json()).configured, false);

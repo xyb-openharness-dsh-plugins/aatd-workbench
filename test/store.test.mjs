@@ -39,7 +39,7 @@ after(() => { try { rmSync(tmp, { recursive: true, force: true }); } catch { /* 
 test('① migrate 幂等：第二次执行不重跑已应用的迁移', () => {
   const db = freshDb();
   const first = migrate(db);
-  assert.deepEqual(first.executed, ['0001_initial.sql'], '首次应执行 0001');
+  assert.deepEqual(first.executed, ['0001_initial.sql', '0002_visits_hospital.sql'], '首次应执行 0001+0002');
   const second = migrate(db);
   assert.deepEqual(second.executed, [], '第二次不应重跑');
   close(db);

@@ -28,7 +28,7 @@ const CDP_PORT = Number(process.env.AATD_M2_CDP_PORT || 9367);
 const URL_APP = `file://${join(ROOT, 'prototypes', 'v0.2', 'index.html')}`;
 
 const ROUTES = [
-  'home', 'labs', 'chart', 'treatment', 'family', 'review', 'settings',
+  'home', 'labs', 'chart', 'treatment', 'family', 'nutrition', 'review', 'settings',
   'course/timeline', 'course/list',
   'records/lib', 'records/draft', 'records/archive', 'records/panel', 'records/summary',
   'mind/feel', 'mind/life',

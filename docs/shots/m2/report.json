@@ -32,25 +32,25 @@
   {
    "profile": "A",
    "route": "treatment",
-   "mainLen": 3567,
+   "mainLen": 3541,
    "breadcrumb": "输注与治疗"
   },
   {
    "profile": "A",
    "route": "family",
-   "mainLen": 5005,
+   "mainLen": 4971,
    "breadcrumb": "家系与基因"
   },
   {
    "profile": "A",
    "route": "review",
-   "mainLen": 2603,
+   "mainLen": 2617,
    "breadcrumb": "复诊准备"
   },
   {
    "profile": "A",
    "route": "settings",
-   "mainLen": 3552,
+   "mainLen": 4823,
    "breadcrumb": "设置"
   },
   {
@@ -98,13 +98,13 @@
   {
    "profile": "A",
    "route": "mind/feel",
-   "mainLen": 4307,
+   "mainLen": 4283,
    "breadcrumb": "心理与生活"
   },
   {
    "profile": "A",
    "route": "mind/life",
-   "mainLen": 4088,
+   "mainLen": 4058,
    "breadcrumb": "心理与生活"
   },
   {
@@ -158,19 +158,19 @@
   {
    "profile": "B",
    "route": "family",
-   "mainLen": 5217,
+   "mainLen": 5183,
    "breadcrumb": "家系与基因"
   },
   {
    "profile": "B",
    "route": "review",
-   "mainLen": 2640,
+   "mainLen": 2654,
    "breadcrumb": "复诊准备"
   },
   {
    "profile": "B",
    "route": "settings",
-   "mainLen": 3549,
+   "mainLen": 4820,
    "breadcrumb": "设置"
   },
   {
@@ -218,13 +218,13 @@
   {
    "profile": "B",
    "route": "mind/feel",
-   "mainLen": 4656,
+   "mainLen": 4632,
    "breadcrumb": "心理与生活"
   },
   {
    "profile": "B",
    "route": "mind/life",
-   "mainLen": 4364,
+   "mainLen": 4334,
    "breadcrumb": "心理与生活"
   },
   {

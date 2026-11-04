@@ -43,7 +43,7 @@ const icon = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 const PAGES = [
   ['home', '看板', 'home'], ['course', '病程', 'pulse'], ['records', '记录与报告', 'folder'],
   ['labs', '检查与指标', 'report'], ['chart', '病情一图秀', 'chart'], ['treatment', '输注与治疗', 'drip'],
-  ['family', '家系与基因', 'users'], ['mind', '心理与生活', 'heart'], ['trial', '临床研究线索', 'flask'],
+  ['family', '家系与基因', 'users'], ['mind', '心理与生活', 'heart'], ['nutrition', '营养与生活', 'leaf'], ['trial', '临床研究线索', 'flask'],
   ['review', '复诊准备', 'calendar'], ['settings', '设置', 'gear']
 ];
 const SUBPAGES = {
@@ -61,6 +61,7 @@ const SUBTITLES = {
   treatment: '输注按周登记、按次计次；漏了哪一周就空着哪一周。',
   family: '家系线索只记医生原话与筛查条目，不判定任何家族成员的风险。',
   mind: '害怕、疲惫、反复出现的念头都算正常反应；这里的内容默认只属于你。',
+  nutrition: '体重和进食的变化只按记录回顾；怎么吃、要不要补，归营养师和医生判断。',
   trial: '线索不是推荐；登记状态与入排条件以研究中心为准，这里不做匹配判定。',
   review: '该带什么、该问什么，提前理成一页，诊室里就不用凭记忆。',
   settings: '档案切换、私密管理、大字模式与口径说明。'
@@ -157,7 +158,8 @@ const defaultSel = (pk) => {
 const state = {
   view: 'home', sub: {}, profile: 'A', sel: {}, range: 'all',
   toggles: { bands: true, treat: true }, pin: null,
-  agentOpen: false, agentDrafts: 0,
+  agentOpen: false, agentDrafts: 0, cfgTab: 'store',
+  mineru: { consent: false, tokenMasked: '' },
   privateOpen: false, query: '', mem: { questions: [], docs: [] }
 };
 if (!state.sel.A) { PROFILE_KEYS.forEach((k) => { state.sel[k] = defaultSel(k); }); }
@@ -566,6 +568,8 @@ function vHome() {
       <span class="eyebrow">演示档案 · AAT 缺乏症</span>
       <h1>${esc(p.name)}，这次想先看什么</h1>
       <p>${esc(p.headline)}</p>
+      <div class="hero-status"><b>${esc(statA[1])}</b><span>${esc(statA[0])} · ${esc(statA[2])}</span></div>
+      ${plan ? `<p class="hero-doc"><b>医生原话</b>：${esc(plan.content.replace(/^呼吸科医生原话（[^）]*，[^）]*）：/, ''))}</p>` : `<p class="hero-doc muted">医生原话未记录；这里不代写——医生说过的话进「家系与基因」的医生原话条目，复诊准备会自动带上。</p>`}
       <div class="chips">${(p.chips || []).map((x) => `<span class="chip on">${esc(x)}</span>`).join('')}</div>
     </div>
     <div class="stat-band">
@@ -573,7 +577,13 @@ function vHome() {
       <div class="stat-tile"><span>近 90 天发作次数</span><b>${f90}</b><small>由发作记录算出，不手填</small></div>
     </div>
   </section>
-  ${plan ? `<div class="alert-strip"><b>急性加重的行动计划（医生原话）</b><span>${esc(plan.content.replace(/^呼吸科医生原话（[^）]*，[^）]*）：/, ''))}</span><button data-action="go" data-page="family" data-sub="">看全部原话 →</button></div>` : ''}
+  <div class="action-band">
+    <div class="action-band-text">${plan ? `<b>急性加重的行动计划（医生原话）</b><span>${esc(plan.content.replace(/^呼吸科医生原话（[^）]*，[^）]*）：/, ''))}</span>` : `<b>接下来可以做的事</b><span>还没有医生确认的行动计划；先把这次的加重和输注记下来，复诊时带上。</span>`}</div>
+    <div class="action-band-actions">
+      <button data-action="entry" data-kind="flare">记一次加重</button>
+      <button class="primary" data-action="go" data-page="review" data-sub="">准备复诊</button>
+    </div>
+  </div>
   <div class="task-grid">
     <button class="task-entry" data-action="go" data-page="course" data-sub="timeline">${icon('pulse')}<b>看这次发作到哪一步了</b><span>时间线 · 泳道 · 发作列表</span></button>
     <button class="task-entry" data-action="go" data-page="treatment" data-sub="">${icon('drip')}<b>输注记了几次、漏了几周</b><span>按周登记，缺口周如实留空</span></button>
@@ -636,7 +646,7 @@ function vCourse() {
     const eps = episodesFor(pk).slice().reverse();
     return `${pageHead(true)}
     <div class="notice">折叠单元 = 一次发作；打印时全部展开。只记「哪天开始、哪天缓解、医生说了什么」，不做轻重排序。</div>
-    ${eps.length ? `<div class="fold-line">${eps.map(foldEpisode).join('')}</div>` : emptyBox('还没有发作记录', '记下第一次加重，时间线会从这里开始画。', '<button data-action="toast" data-msg="原型内不落库；真实版在这里记一次加重（开始日期 / 医生原话）">记一次加重</button>')}`;
+    ${eps.length ? `<div class="fold-line">${eps.map(foldEpisode).join('')}</div>` : emptyBox('还没有发作记录', '记下第一次加重，时间线会从这里开始画。', '<button data-action="entry" data-kind="flare">记一次加重</button>')}`;
   }
   const eps = episodesFor(pk);
   return `${pageHead(true)}
@@ -844,7 +854,7 @@ function vTreatment() {
   </div>
   ${ss.length ? `<div class="section-title"><h2>${esc(sectionTitle(pk, 'treatment'))}</h2><span class="muted">折叠单元 = 一段输注 / 一次调药 · 打印时全部展开</span></div>
   <div class="fold-line">${ss.map(foldSeries).join('')}</div>`
-    : emptyBox('还没有输注段记录', '如果医生安排了每周输注，第一段会在这里建档；在那之前，这里如实空着。', '<button data-action="toast" data-msg="原型内不落库；真实版在这里给第一段输注建档（开始日期 / 频次原话）">给第一段建档</button>')}
+    : emptyBox('还没有输注段记录', '如果医生安排了每周输注，第一段会在这里建档；在那之前，这里如实空着。', '<button data-action="entry" data-kind="infusion">记一次输注</button>')}
   <div class="section-title"><h2>用药清单</h2><span class="muted">长期维持 / 急性期按需 分组列清单，不编序号</span></div>
   <div class="grid two">
     <div class="card"><div class="card-head"><h2>长期维持</h2></div>
@@ -885,7 +895,7 @@ function vFamily() {
         ${row('医生原话条目', `${fl.length} 条（涉及他人健康信息；点上方「本人确认，展开查看」后才显示全文）`)}
         ${row('筛查条目事实', `${items.length} 类（见上方清单，不涉及原话）`)}
       </div></div>`}
-  <div class="actions" style="margin-top:12px"><button data-action="toast" data-msg="原型内不落库；真实版在这里记一条医生原话（关系称谓 / 原话 / 条目 / 日期）">记录一条医生原话</button>${aiBtn('family')}</div>`;
+  <div class="actions" style="margin-top:12px"><button data-action="entry" data-kind="family">记录一条医生原话</button>${aiBtn('family')}</div>`;
 }
 
 /* ---------------- 心理与生活 ---------------- */
@@ -907,7 +917,7 @@ function vMind() {
     <div class="notice">照护者自己的记录位：「还能正常上班吗」「家里谁顶夜班」在这里承接；代记的记录逐条标注记录者。${privateLabel(burden.length, privateCount(burden))}</div>
     <div class="card"><div class="card-head"><h2>生活与负担</h2><span class="muted">只记事实，不给方法建议</span></div>
       <div class="rows">${visible.map((n) => feelRow(n)).join('') || '<p class="muted" style="padding:12px">还没有照护记录。</p>'}</div>
-      <div class="actions"><button data-action="toast" data-msg="原型内不落库；真实版在这里记一条照护记录（日期 / 记录者 / 内容）">记一条照护记录</button>${aiBtn('mind')}</div></div>
+      <div class="actions"><button data-action="entry" data-kind="feel">记一条照护记录</button>${aiBtn('mind')}</div></div>
     <div class="card" style="margin-top:14px"><div class="card-head"><h2>长期话题（只提供记录位）</h2></div>
       <div class="rows">
         ${row('戒烟支持', '医生提过的支持方式照抄记录；这里不推荐产品或课程。')}
@@ -925,7 +935,7 @@ function vMind() {
     <div class="actions"><button data-action="toggle-private">收起</button></div></div>`
     : `<div class="card"><div class="card-head"><h2>当下感受（双主体）</h2><span class="muted">${privateLabel(visible.length, privateCount(feels))}</span></div>
     <div class="rows">${visible.map(feelRow).join('') || emptyBox('还没有感受记录', '反复出现的念头、复查前的紧张，都可以按日期记一条。')}</div>
-    <div class="actions"><button data-action="toast" data-msg="原型内不落库；真实版在这里记一条感受（默认私密，可改共享）">记一条今天的感受</button>${aiBtn('mind')}</div></div>`}
+    <div class="actions"><button data-action="entry" data-kind="feel">记一条今天的感受</button>${aiBtn('mind')}</div></div>`}
   <div class="card" style="margin-top:14px"><div class="card-head"><h2>常见的几种反应</h2><span class="muted">不是医生结论</span></div>
     <div class="rows">
       ${row('反复出现的念头', '「要是早点……会不会不一样」——这类念头反复出现是常见的，不必当成倒退。')}
@@ -949,6 +959,38 @@ function trialFacts(pk) {
   if (liver) facts.push(`肝病科原话：${liver.content.slice(0, 50)}…`);
   return facts;
 }
+function vNutrition() {
+  const pk = state.profile;
+  const wDef = MDEFS().find((d) => d.key && d.key.startsWith('weight'));
+  const ws = wDef ? recsOfDef(pk, wDef.id).filter((r) => typeof r.value_num === 'number') : [];
+  const last = ws[ws.length - 1], prev = ws[ws.length - 2];
+  const diff = last && prev ? Math.round((last.value_num - prev.value_num) * 10) / 10 : null;
+  const notes = filterPrivate(notesFor(pk).filter((n) => n.kind === 'symptom' || n.kind === 'caregiver'));
+  const visits = visitsFor(pk);
+  return `${pageHead(false)}
+  <div class="notice plain">「仅回顾，不解读」：体重与进食只按记录回看；<b>怎么吃、要不要补充，归营养师与医生判断</b>。「不同秤/不同时间称重不合并比较」——同一可比组内才做「较上次」。</div>
+  <div class="grid two" style="margin-top:14px">
+    <div class="card"><div class="card-head"><h2>当下困扰</h2><span class="muted">${privateLabel(notes.length + 1, 0)}</span></div>
+      <div class="rows">
+        ${notes.length ? notes.slice(-3).map((n) => row(esc(n.content), `${esc(fmtDate(n.occurred_on))} · ${n.author_role === 'family' ? '家属代记' : '本人'}`)).join('') : row('还没有记录', '食欲、吞咽、饭后胀这些感受都可以记一条')}
+      </div>
+      <div class="actions"><button data-action="entry" data-kind="feel">记一条今天的感受</button>${aiBtn('nutrition')}</div></div>
+    <div class="card"><div class="card-head"><h2>体重（家用秤）</h2><span class="muted">单位形态【待核】· 不做判读</span></div>
+      <div class="rows">
+        ${last ? row('最近一次', `${last.value_num} kg · ${esc(fmtDate(last.measured_on))} · ${esc(wDef.comparable_key)}`) : row('最近一次', '还没有体重记录（未检测不等于异常）')}
+        ${last ? row('较上次', diff === null ? '只有 1 条记录，不做差' : `${diff > 0 ? '+' : ''}${diff} kg（不同秤/不同时间不合并）`) : ''}
+        ${row('记录次数', `${ws.length} 次 · 只按记录次数计，不评价增减快慢`)}
+      </div>
+      <div class="actions"><button data-action="entry" data-kind="weight">记一次体重</button></div></div>
+  </div>
+  <div class="card" style="margin-top:14px"><div class="card-head"><h2>复查节律</h2><span class="muted">按医生安排，不自动生成提醒</span></div>
+    <div class="rows">
+      ${visits.length ? visits.slice(-3).map((v) => row(`${esc(v.dept)} · ${esc(fmtDate(v.visited_on))}`, esc(v.purpose || ''))).join('') : row('就诊记录', '还没有记录；第一次复诊后从「复诊准备」记一条')}
+      ${row('下一次复查', '以医生给的时间为准；本台不推算、不提醒"该去了"')}
+    </div>
+    <div class="actions"><button data-action="go" data-page="review" data-sub="">打开复诊准备</button></div></div>`;
+}
+
 function vTrial() {
   const pk = state.profile;
   const sub = state.sub.trial || 'build';
@@ -1045,18 +1087,18 @@ function vReview() {
       ${row('行动计划原话', (() => { const n = notesFor(pk).find((x) => x.kind === 'doctor_quote' && /行动计划/.test(x.content)); return n ? esc(n.content).slice(0, 50) + '…' : '还没有记录'; })())}
       ${row('想问清单', qs.length ? esc(qs.join('；')) : '还没有；下面可以加一条')}
     </div>
-    <div class="actions"><button class="primary" data-action="open-page" data-page="plan">打开就诊材料整页 →</button><button data-action="export-review">整理成 Markdown</button><button data-action="add-question">加一个问题</button></div></div>
+    <div class="actions"><button class="primary" data-action="open-page" data-page="plan">打开就诊材料整页 →</button><button data-action="export-review">整理成 Markdown</button><button data-action="entry" data-kind="question">加一个问题</button></div></div>
   <div class="card" style="margin-top:14px"><div class="card-head"><h2>我的问题清单（${qs.length}）</h2></div>
     <div class="rows">${qs.length ? qs.map((q) => row(esc(q), '', '<button class="text-button" data-action="toast" data-msg="已标记已问（演示）">标记已问</button>')).join('') : '<p class="muted" style="padding:12px">还没有问题；点「加一个问题」放一条示例。</p>'}</div></div>`;
 }
 
-/* ---------------- 设置 ---------------- */
-function vSettings() {
+/* ---------------- 设置（三 tab，照家族 CFG_TABS 结构） ---------------- */
+const CFG_TABS = [['store', '工作区'], ['parse', '文档解析（MinerU）'], ['clinic', '临床数据库']];
+function cfgStore() {
   const pk = state.profile;
   const fl = rows('family_lines', pk);
   const privNotes = notesFor(pk).filter((n) => n.is_private);
-  return `${pageHead(true)}
-  <div class="grid two">
+  return `<div class="grid two">
     <div class="card"><div class="card-head"><h2>档案切换</h2><span class="muted">两套均为合成示例 · 仅演示</span></div>
       <div class="rows">${PROFILE_KEYS.map((k) => {
         const p2 = D.profiles[k];
@@ -1070,6 +1112,14 @@ function vSettings() {
       </div>
       <div class="actions"><button id="font-toggle-2" data-action="font">大字模式 ${document.body.classList.contains('large') ? '关' : '开'}</button></div></div>
   </div>
+  <div class="card" style="margin-top:14px"><div class="card-head"><h2>业务资料根目录</h2><span class="muted">本机唯一存储</span></div>
+    <div class="rows">
+      ${row('资料根目录（示意）', '~/…/dsh-desktop/harness/aatd/（宿主 dshHomePath(\'aatd\')；原型不写盘）')}
+      ${row('原件 / 派生 / 数据库', '原件 0 份 · 派生 0 份 · 数据库（演示画像）三块体积 tile：本轮全部为内存演示，不落盘')}
+      ${row('备份与恢复', '导出备份 = 数据库 + 原件清单；恢复前校验 freeze-contract sha256。原型态不提供真实备份按钮')}
+      ${row('目录口径', '拒绝主目录 / 桌面 / 下载根 / tmp；真实版由宿主弹窗选目录，不静默建目录')}
+    </div>
+    <div class="actions"><button data-action="pick-profile" disabled aria-disabled="true" title="原型态：真实版由宿主选择目录">更改位置（原型禁用）</button></div></div>
   <div class="card" style="margin-top:14px"><div class="card-head"><h2>口径说明</h2></div>
     <div class="rows">
       ${careValue(pk).map((v) => row(v, '在任何指标 / 趋势页常驻同屏')).join('')}
@@ -1077,6 +1127,40 @@ function vSettings() {
       ${row('表达口径', '本台用发作—缓解、受累器官（肺 / 肝）与随访节律表达；「第几天」由记录算出。')}
       ${row('数据', '演示数据唯一源：demo/demo-data.js；全部为合成示例 · 仅演示，不指向任何真实患者。')}
     </div></div>`;
+}
+function cfgParse() {
+  const c = state.mineru;
+  return `<div class="card"><div class="card-head"><h2>文档解析（MinerU）</h2>${pill(c.consent ? '已同意（演示）' : '待确认', c.consent ? 'green' : 'yellow')}</div>
+    <div class="rows">
+      <label class="check-row"><input type="checkbox" data-action="mineru-consent" ${c.consent ? 'checked' : ''}><span>我了解：勾选后（真实版）会把所选 PDF 上传到 MinerU 云端解析，只传文件本身，不传档案、判读记录与收藏；可随时关闭。</span></label>
+      ${c.consent ? '' : '<p class="small-note" style="color:var(--warn-ink)">未勾选：不会上传、不会调用任何解析服务。本仓当前未接入 MinerU，勾选与保存也不会联网（演示态）。</p>'}
+      ${row('Token（只显示后 4 位）', c.tokenMasked ? esc(c.tokenMasked) : '未配置（演示态）')}
+      <div class="form-inline"><input type="password" ${c.consent ? '' : 'disabled'} data-mineru-token placeholder="粘贴新 Token（未勾选时禁用）" aria-label="MinerU Token"><button data-action="mineru-save" ${c.consent ? '' : 'disabled'}>保存 Token（演示）</button></div>
+      ${row('解析模型', 'pipeline（固定，不可切 VLM）')}
+      ${row('固定原因', 'pipeline 跨工作台统一口径，表格结构与单位解析可对账；VLM 通道结果不可横向比较')}
+      ${row('免费额度', 'Flash 免费解析单文件上限 10 MB / 20 页；超限保留原件并提示，不丢文件')}
+      ${row('降级提示', '认证失败自动尝试 Flash 时会明确标注「Flash 降级解析」，不静默换通道')}
+    </div>
+    <div class="card" style="box-shadow:none;border:1px dashed var(--line);margin-top:10px"><div class="card-head"><h2>如何申请 Token</h2></div>
+      <div class="rows">${row('1', '访问 MinerU 官网注册账号（真实地址以官网为准）')}${row('2', '控制台创建 API Token')}${row('3', '回到本页勾选同意并粘贴保存')}${row('4', '首次解析前用一份演示 PDF 试跑，核对单位与表格')}</div></div>
+    <div class="actions"><button data-action="mineru-save" ${c.consent ? '' : 'disabled'} class="primary">保存（演示，不联网）</button></div></div>`;
+}
+function cfgClinic() {
+  return `<div class="card"><div class="card-head"><h2>临床数据库（试验/登记离线快照）</h2>${pill('快照已载 · 147 条', 'brand')}</div>
+    <div class="rows">
+      ${row('快照状态', 'research/aatd/trials.sqlite · 147 条登记 · 快照日期 2026-11-05（CT.gov API v2，query.cond="alpha-1 antitrypsin deficiency"）')}
+      ${row('来源与通道终态', 'ctgov OK 147 条；chinadrugtrials HTTP 202（FAILED，反爬未采集）；chictr HTTP 405（FAILED）；WHO ICTRP 门户无 API（未采集）——未查过/失败不等于零结果')}
+      ${row('断网空态', '临床研究页给出「离线快照不可用」空态与获取说明，不报错、不假装有结果')}
+      ${row('与临床研究页同源', '候选池卡头「已载 N / M」与本 tab 的 147 条同源；登记状态一律「未核实」，快照会过期')}
+      ${row('入排原文', '本机快照只存登记的结构化字段；入排标准请到官方登记页核对')}
+    </div>
+    <div class="actions"><button disabled aria-disabled="true" title="原型态：真实版走开发版接口">检查更新（原型禁用）</button></div></div>`;
+}
+function vSettings() {
+  const tab = state.cfgTab;
+  return `${pageHead(true)}
+  <div class="cfg-tabs" role="tablist" aria-label="设置分区">${CFG_TABS.map(([id, label]) => `<button role="tab" aria-selected="${tab === id}" data-action="settings-tab" data-tab="${id}">${label}</button>`).join('')}</div>
+  <div class="tab-body">${tab === 'store' ? cfgStore() : tab === 'parse' ? cfgParse() : cfgClinic()}</div>`;
 }
 
 /* ---------------- 整页视图（#page=xxx）：history 是导航栈唯一真源 ---------------- */
@@ -1317,11 +1401,157 @@ function dlgCandidate(id) {
     `<button class="soft" data-action="cand-reject" data-id="${esc(String(c.id))}">不用这条</button><button class="primary" data-action="cand-save" data-id="${esc(String(c.id))}">接受这条记录</button>`);
 }
 
+/* ---------------- 通用录入窗（三态按钮：保存并继续录入 / 保存并关闭 / 取消） ---------------- */
+const FORM_DEFS = {
+  flare: {
+    title: '记一次加重', eyebrow: '病程 · 一次发作',
+    fields: [
+      { k: 'title', label: '一句话标题', type: 'text', required: true, ph: '如「这次咳喘加重，走两层楼就喘」' },
+      { k: 'started_on', label: '开始日期', type: 'date', required: true, mode: 'numeric' },
+      { k: 'ended_on', label: '缓解日期（还没缓解就留空）', type: 'date', mode: 'numeric' },
+      { k: 'author', label: '记录者', type: 'select', options: [['self', '本人'], ['family', '家属代记']] },
+    ],
+  },
+  infusion: {
+    title: '记一次输注', eyebrow: '输注与治疗 · 按次',
+    fields: [
+      { k: 'occurred_on', label: '输注日期', type: 'date', required: true, mode: 'numeric' },
+      { k: 'series', label: '所属输注段', type: 'select', options: [] },
+      { k: 'label', label: '名称（医生原文）', type: 'text', ph: '如「每周一次加强治疗」' },
+      { k: 'note', label: '备注', type: 'text', ph: '如「左前臂，护士说下次换右侧」' },
+    ],
+  },
+  feel: {
+    title: '记一条今天的感受', eyebrow: '心理与生活 · 只属于你',
+    fields: [
+      { k: 'content', label: '今天想说的', type: 'textarea', required: true, ph: '不用组织语言，写成什么样都可以' },
+      { k: 'occurred_on', label: '日期', type: 'date', mode: 'numeric' },
+      { k: 'author', label: '记录者', type: 'select', options: [['self', '本人'], ['family', '家属代记']] },
+      { k: 'private', label: '私密（默认只自己可见）', type: 'checkbox', checked: true },
+    ],
+  },
+  question: {
+    title: '加一个想问医生的问题', eyebrow: '复诊准备 · 待问',
+    fields: [
+      { k: 'content', label: '问题', type: 'textarea', required: true, ph: '如「下次复查要不要加做肝弹性超声？」' },
+      { k: 'occurred_on', label: '想在哪次复诊问', type: 'date', mode: 'numeric' },
+    ],
+  },
+  weight: {
+    title: '记一次体重', eyebrow: '营养与生活 · 按次记录',
+    fields: [
+      { k: 'value', label: '体重（kg）', type: 'number', required: true, mode: 'decimal', ph: '如 62.4' },
+      { k: 'measured_on', label: '称重日期', type: 'date', required: true, mode: 'numeric' },
+      { k: 'note', label: '备注（同一台秤？饭前饭后？）', type: 'text', ph: '如「早饭后，家用秤」' },
+    ],
+  },
+  family: {
+    title: '记一条医生原话（家系线索）', eyebrow: '家系与基因 · 只记原话',
+    fields: [
+      { k: 'person_rel', label: '关系称谓', type: 'text', required: true, ph: '如「妹妹」「儿子」' },
+      { k: 'doctor_quote', label: '医生原话', type: 'textarea', required: true, ph: '逐字照抄，不改写' },
+      { k: 'happened_on', label: '日期', type: 'date', mode: 'numeric' },
+    ],
+  },
+};
+const formErr = { kind: null, errors: [] };
+function formField(f, v) {
+  const id = 'f-' + f.k;
+  const req = f.required ? '<em class="req" aria-hidden="true">*</em>' : '';
+  const base = `id="${id}" data-field="${f.k}" ${f.mode === 'numeric' ? 'inputmode="numeric"' : ''}`;
+  if (f.mode === 'decimal') return `<label class="form-label" for="${id}">${esc(f.label)}${req}</label><input type="number" step="0.1" ${base} placeholder="${esc(f.ph || '')}" value="${esc(v || '')}">`;
+  if (f.type === 'select') {
+    const opts = (f.options || []).map(([val, lab]) => `<option value="${esc(val)}">${esc(lab)}</option>`).join('');
+    return `<label class="form-label" for="${id}">${esc(f.label)}${req}</label><select ${base}>${opts}</select>`;
+  }
+  if (f.type === 'textarea') {
+    return `<label class="form-label" for="${id}">${esc(f.label)}${req}</label><textarea ${base} rows="3" placeholder="${esc(f.ph || '')}">${esc(v || '')}</textarea>`;
+  }
+  if (f.type === 'checkbox') {
+    return `<label class="check-row"><input type="checkbox" ${base} ${f.checked ? 'checked' : ''}><span>${esc(f.label)}</span></label>`;
+  }
+  return `<label class="form-label" for="${id}">${esc(f.label)}${req}</label><input type="${f.type}" ${base} placeholder="${esc(f.ph || '')}" value="${esc(v || '')}">`;
+}
+function openForm(kind, opts = {}) {
+  const def = FORM_DEFS[kind];
+  if (!def) return;
+  formErr.kind = kind; formErr.errors = [];
+  const seriesOpts = kind === 'infusion'
+    ? seriesFor(state.profile).map((s) => [String(s.id), s.label || '输注段'])
+    : [];
+  if (seriesOpts.length) FORM_DEFS.infusion.fields[1].options = seriesOpts;
+  const body = `<div class="notice plain">录入只写本机事实层；本页是演示态，保存进内存画像，刷新即回到合成示例。文本类内容只能照抄，不代写、不改写。</div>
+    <div id="form-err" role="alert"></div>
+    <div class="form-grid">${def.fields.map((f) => `<div class="form-row">${formField(f, opts[f.k])}</div>`).join('')}</div>`;
+  openDialog(def.eyebrow, def.title, body,
+    `<button class="soft" data-action="close">取消</button><button class="soft" data-action="form-save" data-mode="continue">保存并继续录入</button><button class="primary" data-action="form-save" data-mode="close">保存并关闭</button>`);
+}
+function readForm() {
+  const def = FORM_DEFS[formErr.kind];
+  const out = {}; const errs = [];
+  for (const f of def.fields) {
+    const el = document.querySelector(`[data-field="${f.k}"]`);
+    const v = el ? (f.type === 'checkbox' ? el.checked : String(el.value || '').trim()) : '';
+    if (f.required && !v) errs.push(f.label);
+    out[f.k] = v;
+  }
+  return { out, errs };
+}
+function saveForm(mode) {
+  const kind = formErr.kind;
+  const { out, errs } = readForm();
+  formErr.errors = errs;
+  if (errs.length) {
+    const box = $('#form-err');
+    if (box) box.innerHTML = `<div class="notice warn">还有必填项没填：${errs.map((e) => esc(e)).join('、')}。填好再保存。</div>`;
+    return;
+  }
+  const pk = state.profile, now = todayISO();
+  const uid = (p) => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+  if (kind === 'flare') {
+    D.episodes.push({ id: uid('e'), profile_key: pk, kind: 'exacerbation', started_on: out.started_on, ended_on: out.ended_on || null, title: out.title, note_ref: null, is_private: 0, in_use: 1, created_at: now });
+  } else if (kind === 'infusion') {
+    let sid = out.series;
+    if (!sid || sid === '') {
+      sid = uid('is');
+      D.infusion_series.push({ id: sid, profile_key: pk, label: out.label || '新的一段输注（演示）', cadence_note: null, started_on: out.occurred_on, ended_on: null, is_private: 0, in_use: 1, created_at: now });
+    }
+    D.med_events.push({ id: uid('me'), profile_key: pk, kind: 'infusion', label: out.label || '加强治疗输注', occurred_on: out.occurred_on, series_id: sid, source_kind: 'manual', is_private: 0, in_use: 1, created_at: now });
+  } else if (kind === 'feel' || kind === 'question') {
+    D.notes.push({ id: uid('n'), profile_key: pk, kind: kind === 'feel' ? 'symptom' : 'question', author_role: out.author || 'self', content: out.content, occurred_on: out.occurred_on || null, is_private: kind === 'feel' ? (out.private ? 1 : 0) : 0, in_use: 1, created_at: now });
+  } else if (kind === 'weight') {
+    let def = MDEFS().find((d) => d.key && d.key.startsWith('weight'));
+    if (!def) {
+      def = { id: uid('wd'), profile_key: pk, key: 'weight_' + pk.toLowerCase(), name: '体重（家用秤）', group_key: 'body', unit: 'kg', unit_note: '单位形态【待核】', comparable_key: 'home-scale', ord: 9 };
+      D.metric_defs.push(def);
+    }
+    D.metric_records.push({ id: uid('wr'), profile_key: pk, metric_id: def.id, value_num: Number(out.value), value_text: null, measured_on: out.measured_on, source_kind: 'manual', source_ref: out.note || null, is_private: 0, in_use: 1, corrected_by: null, created_at: now });
+  } else if (kind === 'family') {
+    D.family_lines.push({ id: uid('fl'), profile_key: pk, person_rel: out.person_rel, doctor_quote: out.doctor_quote, item_fact: null, happened_on: out.happened_on || null, is_private: 1, in_use: 1, created_at: now });
+  }
+  if (mode === 'continue') {
+    /* 继续录入：清空字段但保持弹窗（可一口气录完一次疗程） */
+    FORM_DEFS[kind].fields.forEach((f) => {
+      const el = document.querySelector(`[data-field="${f.k}"]`);
+      if (!el) return;
+      if (f.type === 'checkbox') el.checked = !!f.checked;
+      else if (f.type === 'select') el.selectedIndex = 0;
+      else el.value = '';
+    });
+    const box = $('#form-err');
+    if (box) box.innerHTML = `<div class="notice">已保存 1 条（演示）。可以接着录下一条。</div>`;
+    render();
+    toast('已保存并继续录入（演示）');
+  } else {
+    closeDialog(); render(); toast('已保存并关闭（演示）：在看板与对应页面可见');
+  }
+}
+
 /* ---------------- 渲染根 ---------------- */
-const VIEWS = { home: vHome, course: vCourse, records: vRecords, labs: vLabs, chart: vChart, treatment: vTreatment, family: vFamily, mind: vMind, trial: vTrial, review: vReview, settings: vSettings };
+const VIEWS = { home: vHome, course: vCourse, records: vRecords, labs: vLabs, chart: vChart, treatment: vTreatment, family: vFamily, mind: vMind, nutrition: vNutrition, trial: vTrial, review: vReview, settings: vSettings };
 /* 路由登记（navigate/applyHash 可达的全部叶子，探针按此穷举） */
 const ROUTES = [
-  'home', 'labs', 'chart', 'treatment', 'family', 'review', 'settings',
+  'home', 'labs', 'chart', 'treatment', 'family', 'nutrition', 'review', 'settings',
   'course/timeline', 'course/list',
   'records/lib', 'records/draft', 'records/archive', 'records/panel', 'records/summary',
   'mind/feel', 'mind/life',
@@ -1429,6 +1659,19 @@ document.addEventListener('click', (e) => {
   if (a === 'pv-close') { pvApplyClose(); try { if (history.state && history.state.pv) history.back(); } catch (_) {} return; }
   if (a === 'dp-close') { dpClose(); return; }
   if (a === 'font') { toggleFont(); return; }
+  if (a === 'settings-tab') { state.cfgTab = el.dataset.tab; render(); return; }
+  if (a === 'entry') { openForm(el.dataset.kind); return; }
+  if (a === 'form-save') { saveForm(el.dataset.mode); return; }
+  if (a === 'mineru-consent') { state.mineru.consent = el.checked; render(); return; }
+  if (a === 'mineru-save') {
+    const input = document.querySelector('[data-mineru-token]');
+    const raw = input ? String(input.value || '').trim() : '';
+    /* 只显示后 4 位（评审 C3 口径）：空输入不覆盖已保存掩码 */
+    if (raw) state.mineru.tokenMasked = '••••' + raw.slice(-4);
+    render();
+    toast('已保存（演示）：本仓未接入 MinerU，保存不联网、不写密钥文件');
+    return;
+  }
 });
 /* 深链接 #page=xxx：刷新后按当前档案重建 */
 function pvFromHash() {

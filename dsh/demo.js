@@ -73,9 +73,10 @@ export function seedDemo(db, input) {
     const insEpisode = db.prepare(`INSERT INTO episodes
       (id, profile_key, kind, started_on, ended_on, title, note_ref, is_private, in_use, corrected_by, created_at)
       VALUES (?,?,?,?,?,?,?,?,?,?,?)`);
+    /* 0002：visits 增 hospital / contact / contact_source（F6 多家医院），显式 null 保留 */
     const insVisit = db.prepare(`INSERT INTO visits
-      (id, profile_key, dept, visited_on, purpose, note_ref, is_private, in_use, corrected_by, created_at)
-      VALUES (?,?,?,?,?,?,?,?,?,?)`);
+      (id, profile_key, dept, visited_on, purpose, note_ref, hospital, contact, contact_source, is_private, in_use, corrected_by, created_at)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`);
     const insDoc = db.prepare('INSERT INTO doc_refs (id, profile_key, title, kind, ref, note, in_use, created_at) VALUES (?,?,?,?,?,?,?,?)');
     const insCand = db.prepare('INSERT INTO ai_candidates (id, profile_key, target_table, payload, status, created_at) VALUES (?,?,?,?,?,?)');
     const insSeries = db.prepare(`INSERT INTO infusion_series
@@ -137,6 +138,7 @@ export function seedDemo(db, input) {
     }
     for (const r of data.visits || []) {
       insVisit.run(r.id, r.profile_key, r.dept, r.visited_on, r.purpose ?? null, r.note_ref ?? null,
+        r.hospital ?? null, r.contact ?? null, r.contact_source ?? null,
         r.is_private ? 1 : 0, r.in_use === undefined ? 1 : r.in_use, r.corrected_by ?? null, r.created_at ?? null);
       bump();
     }
