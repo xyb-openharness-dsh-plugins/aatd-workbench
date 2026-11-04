@@ -1,44 +1,55 @@
-# 小筛宝 A1Pal · α1-抗胰蛋白酶缺乏症工作台
+# 小筛宝 A1Pal · α1-抗胰蛋白酶缺乏症工作台（v0.2.0 原型）
 
-服务α1-抗胰蛋白酶缺乏症患者及家属的本机信息整理与就诊准备工作台，分开保存本人/代记症状、肺功能与肝功能报告原文、每周加强治疗输注记录和医生答复，不输出诊断、风险或处置判断。
+服务 α1-抗胰蛋白酶缺乏症（AATD）患者及家属的本机信息整理与就诊准备工作台：把肺功能与肝功能两路化验、每周加强治疗输注、发作—缓解病程和医生原话放在一起回看，准备复诊材料。**只整理，不判读**——不输出诊断、风险或处置判断。
 
-这是接入骨架，尚未实现真实业务。初始化后先将 [项目设计提示词](docs/DESIGN-PROMPT.md) 交给当前Agent；它应展示实际路径并以已有用户/场景/流程素材对齐设计者、研究与取舍原则。癌种项目另有 [完整专用提示词](prompts/NEW-CANCER-WORKBENCH.md)。需求见 [BRIEF](docs/BRIEF.md)，规格见 [SPEC](docs/SPEC.md)，任务见 [TASKS](docs/TASKS.md)；先读 [AGENTS](AGENTS.md)。CLI输出交接与首问，实际对话由Agent接续。
+> 本页全部为合成示例（演示档案 A/B），未连接真实病历与宿主；0 患者访谈、0 临床审核。
 
-## 开发顺序
+## 疾病概要
 
-先共创SPEC和候选数据关系，再交付HTML交互工作台；由用户确认对应版本/模块后，复核SCHEMA/API并实现生产功能。确认记录见docs/PROTOTYPE-REVIEW.md；模型不依赖前端Tab/流程。模板骨架不是业务已确认。
+α1-抗胰蛋白酶缺乏症是一种遗传病：SERPINA1 基因的变异让血清里的 α1-抗胰蛋白酶明显偏少，主要累及肺（肺气肿）与肝（肝病），国际综述与 2025 年版中国官方指南均有收载（本台标注来源，未取得的部分如实写「未取得」）。病程以长期随访为主，间有急性加重——工作台因此按「发作—缓解 + 肺/肝两路化验 + 每周输注」组织，不使用肿瘤分期与治疗线序语义。顶栏「?」可看四段疾病概要（定义 → 医学资料规范和指南情况 → 治疗全景 → 发展趋势），每段带来源行。
 
-## 当前能力
+## 关键功能（截图墙）
 
-- 一个 DSH 工作台注册、认证的健康接口、版本展示与标准/大字切换。
-- 已明确选择布局：business-first。business-first 使用 customFrame；模板不创建会话或复制聊天。需要 AI 协助时按官方合同接入原生 conversation 和会话管理。
-- 无业务数据库、无演示患者、无真实密钥；所有业务页按确认 spec 逐项实现。
+### 看板：最近记录、待核对与想问医生的问题，一屏还原
+![看板](docs/assets/screenshots/aatd-v0.2.0-home-A.png)
+刚确诊的档案 A：记录少、未知多，缺失项显式留空，不冒充有数据。
 
-## 开发与本地验收
+### 检查与指标：肺功能、肝功能分节，不同方法不合并
+![检查与指标](docs/assets/screenshots/aatd-v0.2.0-labs-B.png)
+每张指标卡带方法/单位/机构可比组；「较上次」不画升降箭头，不暗示好坏。
 
-需要 Node.js 22+、Git、包管理器和可用 DSH Desktop；采用 SQLite 时另核验 node:sqlite 版本条件。宿主 peers 的范围仅是模板基线，请与目标 Desktop 实际依赖核对。
+### 病情一图秀：化验、发作—缓解与输注放回同一段时间
+![一图秀](docs/assets/screenshots/aatd-v0.2.0-chart-B.png)
+曲线按各自全期归一化，区间带与数据点分层；跨方法断开不连线。
 
-```bash
-npm install
-npm run check
-npm run pack:check
-npm pack
-```
+### 输注与治疗：按周登记、按次计次，漏了哪周就空着哪周
+![输注与治疗](docs/assets/screenshots/aatd-v0.2.0-treatment-B.png)
+折叠卡按「一次发作 / 一次调药」分组（details 原生折叠，可打印全展开）。
 
-`npm run check` 只保证"能装"（语法 + 装包合同），第一天就该是绿的。`npm run audit` 管"还是不是家族里的一员"：版本三处一致、`lib/layout.js` 面板参数单一来源、检查链完整、文档与密钥卫生，**只看代码与文件，不看文档自述**。新项目刚生成时 audit 必然有 fail，那是待办清单；交付/发布前必须清零，存在 fail 不得发布（`npm run release:check` 一次跑完两者）。
+### 折叠卡收起态
+![折叠收起](docs/assets/screenshots/aatd-v0.2.0-fold-closed.png)
 
-跑的时间点：**每次改完**跑 `check`；**G2 原型确认后、写业务代码前**先跑一次 `audit`（这时缺的多是 `lib/layout.js`、`VERSION` 这类结构，越早补越便宜）；**交付/装机前**必须跑 `release:check`；**发布或投稿前**把 `npm run audit --json` 的 `xx/xx 通过 · N 失败 · M 待人工` 抄进 `docs/RELEASE.md` 的「家族一致性」一行。`✗` 是结构缺口（补齐，或在 `docs/DEV-REQUIREMENTS-<日期>.md` 写明偏离理由并由用户确认），`!` 是需人工判断的项（逐条给「已人工确认 / 确实没有」）。
+### 折叠卡展开态
+![折叠展开](docs/assets/screenshots/aatd-v0.2.0-fold-open.png)
 
-`npm install` 可能按 npm 策略解析 peer；勿为消警告重复打包宿主 runtime。客户端本身是单文件；引入 TS/组件库后需添加构建步骤并保留单文件导出。
+## 怎么用
 
-本地安装入口以当前 Desktop/CLI 帮助为准。安装后按 [docs/06-VALIDATION-AND-RELEASE.md](docs/06-VALIDATION-AND-RELEASE.md) 与官方自测完成真实 UI 验收，并填写 [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md)。静态检查不代表已加载。
+1. `git clone` 本仓后直接双击 `prototypes/v0.2/index.html`（file:// 直开，零依赖）。
+2. 顶栏「档案 A/B」切换两套合成演示档案：A 刚确诊记录少，B 随访 6 年数据多；切换后整页联动，不串档。
+3. `npm run check` 跑静态检查链；`npm test` 跑数据层与打包测试；`node scripts/probe-aatd-m2.mjs` 跑 40 条路由 × 2 档案的无头走查（需本机 Chrome）。
+4. 开发版（M5 起）通过 DSH Desktop 安装；本原型阶段未接入宿主，AI 面板为演示态（明说「不会发送」）。
 
-Logo 来源与使用限制见 assets/README.md。许可证、作者、仓库/发布策略由本项目维护者确认后填写；模板默认为 private/UNLICENSED。
+## 数据与口径
 
-感谢小x宝社区、DataElement 社区，以及 sam / hhx / 繁华的 ❤️ 贡献。
+- 演示数据唯一源：`demo/demo-data.js`（A/B 两套，字段对齐 `schema/0001_initial.sql`）；界面标注「合成示例 · 仅演示」。
+- 口径同屏：「仅回顾，不解读」「解读归医生」「不同方法不合并」。
+- 隐私：私密记录在看板、复诊准备导出、AI 上下文三出口共用同一过滤函数，页内写「N 条中私密 M 条」；更正=新增版本，无裸删除。
+- 无判读列：schema 无 diagnosis/risk_level 类派生判定；阈值一律【待核·未过临床审核】。
+- 医学内容来源与边界见 `docs/CLINICAL-DATA.md`（24 条核实、4 条未取得、失败 URL 留痕；0 临床审核）。
 
-初始化来源记录见 `.dsh-wb-starter.json`。更新社区脚手架不会覆盖本项目；需要升级时先用相同确认配置在临时目录生成，再审阅差异。CLI 用法见 [docs/CLI-GIT.md](docs/CLI-GIT.md)。
+## 开发
 
-## HTML先行与数据演进
-
-业务开发前先交付HTML交互工作台原型、实际预览并由用户确认版本/hash和范围。数据设计先区分领域事实、流程状态和页面读模型，走查前端/流程变化、兼容与迁移；原型对象不直接作为表。见[规范](docs/14-HTML-AND-DATA-CONTRACT.md)。
+- 文档入口：`docs/SPEC.md`（范围）、`docs/INTERACTION-DESIGN.md`（IP 路径）、`docs/DEV-PLAN.md`（阶段台账与闸口）、`docs/CHECKLIST-G2.md`（逐条报数）。
+- 检查链：`npm run check`（13 步静态断言）；原型探针：`scripts/probe-aatd-m2.mjs`、`scripts/probe-m2-extra.mjs`、`scripts/probe-responsive.mjs`。
+- 版本：package.json / 本 README / prototypes 版本行 / 页脚版本四处同源（v0.2.0）。
+- 家族规范与基准对照：`docs/FAMILY-CONTRAST.md`。

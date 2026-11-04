@@ -1,0 +1,530 @@
+{
+  "1300/home": {
+    "bodyScrollW": 1300,
+    "innerW": 1300,
+    "vertical": [],
+    "clipped": []
+  },
+  "1300/records/panel": {
+    "bodyScrollW": 1300,
+    "innerW": 1300,
+    "vertical": [],
+    "clipped": []
+  },
+  "1300/records/summary": {
+    "bodyScrollW": 1300,
+    "innerW": 1300,
+    "vertical": [],
+    "clipped": []
+  },
+  "1300/course/timeline": {
+    "bodyScrollW": 1300,
+    "innerW": 1300,
+    "vertical": [],
+    "clipped": []
+  },
+  "1300/treatment": {
+    "bodyScrollW": 1300,
+    "innerW": 1300,
+    "vertical": [],
+    "clipped": []
+  },
+  "1300/labs": {
+    "bodyScrollW": 1300,
+    "innerW": 1300,
+    "vertical": [],
+    "clipped": []
+  },
+  "1300/chart": {
+    "bodyScrollW": 1300,
+    "innerW": 1300,
+    "vertical": [],
+    "clipped": []
+  },
+  "1300/family": {
+    "bodyScrollW": 1300,
+    "innerW": 1300,
+    "vertical": [],
+    "clipped": []
+  },
+  "1300/trial/search": {
+    "bodyScrollW": 1300,
+    "innerW": 1300,
+    "vertical": [],
+    "clipped": []
+  },
+  "1300/mind/feel": {
+    "bodyScrollW": 1300,
+    "innerW": 1300,
+    "vertical": [],
+    "clipped": []
+  },
+  "1300/review": {
+    "bodyScrollW": 1300,
+    "innerW": 1300,
+    "vertical": [],
+    "clipped": []
+  },
+  "1180/home": {
+    "bodyScrollW": 1180,
+    "innerW": 1180,
+    "vertical": [],
+    "clipped": []
+  },
+  "1180/records/panel": {
+    "bodyScrollW": 1180,
+    "innerW": 1180,
+    "vertical": [],
+    "clipped": []
+  },
+  "1180/records/summary": {
+    "bodyScrollW": 1180,
+    "innerW": 1180,
+    "vertical": [],
+    "clipped": []
+  },
+  "1180/course/timeline": {
+    "bodyScrollW": 1180,
+    "innerW": 1180,
+    "vertical": [],
+    "clipped": []
+  },
+  "1180/treatment": {
+    "bodyScrollW": 1180,
+    "innerW": 1180,
+    "vertical": [],
+    "clipped": []
+  },
+  "1180/labs": {
+    "bodyScrollW": 1180,
+    "innerW": 1180,
+    "vertical": [],
+    "clipped": []
+  },
+  "1180/chart": {
+    "bodyScrollW": 1180,
+    "innerW": 1180,
+    "vertical": [],
+    "clipped": []
+  },
+  "1180/family": {
+    "bodyScrollW": 1180,
+    "innerW": 1180,
+    "vertical": [],
+    "clipped": []
+  },
+  "1180/trial/search": {
+    "bodyScrollW": 1180,
+    "innerW": 1180,
+    "vertical": [],
+    "clipped": []
+  },
+  "1180/mind/feel": {
+    "bodyScrollW": 1180,
+    "innerW": 1180,
+    "vertical": [],
+    "clipped": []
+  },
+  "1180/review": {
+    "bodyScrollW": 1180,
+    "innerW": 1180,
+    "vertical": [],
+    "clipped": []
+  },
+  "1000/home": {
+    "bodyScrollW": 1000,
+    "innerW": 1000,
+    "vertical": [],
+    "clipped": []
+  },
+  "1000/records/panel": {
+    "bodyScrollW": 1000,
+    "innerW": 1000,
+    "vertical": [],
+    "clipped": []
+  },
+  "1000/records/summary": {
+    "bodyScrollW": 1000,
+    "innerW": 1000,
+    "vertical": [],
+    "clipped": []
+  },
+  "1000/course/timeline": {
+    "bodyScrollW": 1000,
+    "innerW": 1000,
+    "vertical": [],
+    "clipped": []
+  },
+  "1000/treatment": {
+    "bodyScrollW": 1000,
+    "innerW": 1000,
+    "vertical": [],
+    "clipped": []
+  },
+  "1000/labs": {
+    "bodyScrollW": 1000,
+    "innerW": 1000,
+    "vertical": [],
+    "clipped": []
+  },
+  "1000/chart": {
+    "bodyScrollW": 1000,
+    "innerW": 1000,
+    "vertical": [],
+    "clipped": []
+  },
+  "1000/family": {
+    "bodyScrollW": 1000,
+    "innerW": 1000,
+    "vertical": [],
+    "clipped": []
+  },
+  "1000/trial/search": {
+    "bodyScrollW": 1000,
+    "innerW": 1000,
+    "vertical": [],
+    "clipped": []
+  },
+  "1000/mind/feel": {
+    "bodyScrollW": 1000,
+    "innerW": 1000,
+    "vertical": [],
+    "clipped": []
+  },
+  "1000/review": {
+    "bodyScrollW": 1000,
+    "innerW": 1000,
+    "vertical": [],
+    "clipped": []
+  },
+  "940/home": {
+    "bodyScrollW": 940,
+    "innerW": 940,
+    "vertical": [],
+    "clipped": []
+  },
+  "940/records/panel": {
+    "bodyScrollW": 940,
+    "innerW": 940,
+    "vertical": [],
+    "clipped": []
+  },
+  "940/records/summary": {
+    "bodyScrollW": 940,
+    "innerW": 940,
+    "vertical": [],
+    "clipped": []
+  },
+  "940/course/timeline": {
+    "bodyScrollW": 940,
+    "innerW": 940,
+    "vertical": [],
+    "clipped": []
+  },
+  "940/treatment": {
+    "bodyScrollW": 940,
+    "innerW": 940,
+    "vertical": [],
+    "clipped": []
+  },
+  "940/labs": {
+    "bodyScrollW": 940,
+    "innerW": 940,
+    "vertical": [],
+    "clipped": []
+  },
+  "940/chart": {
+    "bodyScrollW": 940,
+    "innerW": 940,
+    "vertical": [],
+    "clipped": []
+  },
+  "940/family": {
+    "bodyScrollW": 940,
+    "innerW": 940,
+    "vertical": [],
+    "clipped": []
+  },
+  "940/trial/search": {
+    "bodyScrollW": 940,
+    "innerW": 940,
+    "vertical": [],
+    "clipped": []
+  },
+  "940/mind/feel": {
+    "bodyScrollW": 940,
+    "innerW": 940,
+    "vertical": [],
+    "clipped": []
+  },
+  "940/review": {
+    "bodyScrollW": 940,
+    "innerW": 940,
+    "vertical": [],
+    "clipped": []
+  },
+  "900/home": {
+    "bodyScrollW": 900,
+    "innerW": 900,
+    "vertical": [],
+    "clipped": []
+  },
+  "900/records/panel": {
+    "bodyScrollW": 900,
+    "innerW": 900,
+    "vertical": [],
+    "clipped": []
+  },
+  "900/records/summary": {
+    "bodyScrollW": 900,
+    "innerW": 900,
+    "vertical": [],
+    "clipped": []
+  },
+  "900/course/timeline": {
+    "bodyScrollW": 900,
+    "innerW": 900,
+    "vertical": [],
+    "clipped": []
+  },
+  "900/treatment": {
+    "bodyScrollW": 900,
+    "innerW": 900,
+    "vertical": [],
+    "clipped": []
+  },
+  "900/labs": {
+    "bodyScrollW": 900,
+    "innerW": 900,
+    "vertical": [],
+    "clipped": []
+  },
+  "900/chart": {
+    "bodyScrollW": 900,
+    "innerW": 900,
+    "vertical": [],
+    "clipped": []
+  },
+  "900/family": {
+    "bodyScrollW": 900,
+    "innerW": 900,
+    "vertical": [],
+    "clipped": []
+  },
+  "900/trial/search": {
+    "bodyScrollW": 900,
+    "innerW": 900,
+    "vertical": [],
+    "clipped": []
+  },
+  "900/mind/feel": {
+    "bodyScrollW": 900,
+    "innerW": 900,
+    "vertical": [],
+    "clipped": []
+  },
+  "900/review": {
+    "bodyScrollW": 900,
+    "innerW": 900,
+    "vertical": [],
+    "clipped": []
+  },
+  "780/home": {
+    "bodyScrollW": 780,
+    "innerW": 780,
+    "vertical": [],
+    "clipped": []
+  },
+  "780/records/panel": {
+    "bodyScrollW": 780,
+    "innerW": 780,
+    "vertical": [],
+    "clipped": []
+  },
+  "780/records/summary": {
+    "bodyScrollW": 780,
+    "innerW": 780,
+    "vertical": [],
+    "clipped": []
+  },
+  "780/course/timeline": {
+    "bodyScrollW": 780,
+    "innerW": 780,
+    "vertical": [],
+    "clipped": []
+  },
+  "780/treatment": {
+    "bodyScrollW": 780,
+    "innerW": 780,
+    "vertical": [],
+    "clipped": []
+  },
+  "780/labs": {
+    "bodyScrollW": 780,
+    "innerW": 780,
+    "vertical": [],
+    "clipped": []
+  },
+  "780/chart": {
+    "bodyScrollW": 780,
+    "innerW": 780,
+    "vertical": [],
+    "clipped": []
+  },
+  "780/family": {
+    "bodyScrollW": 780,
+    "innerW": 780,
+    "vertical": [],
+    "clipped": []
+  },
+  "780/trial/search": {
+    "bodyScrollW": 780,
+    "innerW": 780,
+    "vertical": [],
+    "clipped": []
+  },
+  "780/mind/feel": {
+    "bodyScrollW": 780,
+    "innerW": 780,
+    "vertical": [],
+    "clipped": []
+  },
+  "780/review": {
+    "bodyScrollW": 780,
+    "innerW": 780,
+    "vertical": [],
+    "clipped": []
+  },
+  "700/home": {
+    "bodyScrollW": 700,
+    "innerW": 700,
+    "vertical": [],
+    "clipped": []
+  },
+  "700/records/panel": {
+    "bodyScrollW": 700,
+    "innerW": 700,
+    "vertical": [],
+    "clipped": []
+  },
+  "700/records/summary": {
+    "bodyScrollW": 700,
+    "innerW": 700,
+    "vertical": [],
+    "clipped": []
+  },
+  "700/course/timeline": {
+    "bodyScrollW": 700,
+    "innerW": 700,
+    "vertical": [],
+    "clipped": []
+  },
+  "700/treatment": {
+    "bodyScrollW": 700,
+    "innerW": 700,
+    "vertical": [],
+    "clipped": []
+  },
+  "700/labs": {
+    "bodyScrollW": 700,
+    "innerW": 700,
+    "vertical": [],
+    "clipped": []
+  },
+  "700/chart": {
+    "bodyScrollW": 700,
+    "innerW": 700,
+    "vertical": [],
+    "clipped": []
+  },
+  "700/family": {
+    "bodyScrollW": 700,
+    "innerW": 700,
+    "vertical": [],
+    "clipped": []
+  },
+  "700/trial/search": {
+    "bodyScrollW": 700,
+    "innerW": 700,
+    "vertical": [],
+    "clipped": []
+  },
+  "700/mind/feel": {
+    "bodyScrollW": 700,
+    "innerW": 700,
+    "vertical": [],
+    "clipped": []
+  },
+  "700/review": {
+    "bodyScrollW": 700,
+    "innerW": 700,
+    "vertical": [],
+    "clipped": []
+  },
+  "600/home": {
+    "bodyScrollW": 600,
+    "innerW": 600,
+    "vertical": [],
+    "clipped": []
+  },
+  "600/records/panel": {
+    "bodyScrollW": 600,
+    "innerW": 600,
+    "vertical": [],
+    "clipped": []
+  },
+  "600/records/summary": {
+    "bodyScrollW": 600,
+    "innerW": 600,
+    "vertical": [],
+    "clipped": []
+  },
+  "600/course/timeline": {
+    "bodyScrollW": 600,
+    "innerW": 600,
+    "vertical": [],
+    "clipped": []
+  },
+  "600/treatment": {
+    "bodyScrollW": 600,
+    "innerW": 600,
+    "vertical": [],
+    "clipped": []
+  },
+  "600/labs": {
+    "bodyScrollW": 600,
+    "innerW": 600,
+    "vertical": [],
+    "clipped": []
+  },
+  "600/chart": {
+    "bodyScrollW": 600,
+    "innerW": 600,
+    "vertical": [],
+    "clipped": []
+  },
+  "600/family": {
+    "bodyScrollW": 600,
+    "innerW": 600,
+    "vertical": [],
+    "clipped": []
+  },
+  "600/trial/search": {
+    "bodyScrollW": 600,
+    "innerW": 600,
+    "vertical": [],
+    "clipped": []
+  },
+  "600/mind/feel": {
+    "bodyScrollW": 600,
+    "innerW": 600,
+    "vertical": [],
+    "clipped": []
+  },
+  "600/review": {
+    "bodyScrollW": 600,
+    "innerW": 600,
+    "vertical": [],
+    "clipped": []
+  }
+}

@@ -1,0 +1,255 @@
+{
+ "screenshots": 40,
+ "errors": [],
+ "assertions": {
+  "name_A": "A · 小陈",
+  "count_A": 0,
+  "name_B": "B · 老周",
+  "count_B": 0,
+  "profilesDiffer": true,
+  "routeTotal": 40,
+  "errorCount": 0
+ },
+ "routeResults": [
+  {
+   "profile": "A",
+   "route": "home",
+   "mainLen": 8077,
+   "breadcrumb": "看板"
+  },
+  {
+   "profile": "A",
+   "route": "labs",
+   "mainLen": 5237,
+   "breadcrumb": "检查与指标"
+  },
+  {
+   "profile": "A",
+   "route": "chart",
+   "mainLen": 5296,
+   "breadcrumb": "病情一图秀"
+  },
+  {
+   "profile": "A",
+   "route": "treatment",
+   "mainLen": 3567,
+   "breadcrumb": "输注与治疗"
+  },
+  {
+   "profile": "A",
+   "route": "family",
+   "mainLen": 4615,
+   "breadcrumb": "家系与基因"
+  },
+  {
+   "profile": "A",
+   "route": "review",
+   "mainLen": 2603,
+   "breadcrumb": "复诊准备"
+  },
+  {
+   "profile": "A",
+   "route": "settings",
+   "mainLen": 3437,
+   "breadcrumb": "设置"
+  },
+  {
+   "profile": "A",
+   "route": "course/timeline",
+   "mainLen": 4934,
+   "breadcrumb": "病程"
+  },
+  {
+   "profile": "A",
+   "route": "course/list",
+   "mainLen": 2841,
+   "breadcrumb": "病程"
+  },
+  {
+   "profile": "A",
+   "route": "records/lib",
+   "mainLen": 3212,
+   "breadcrumb": "记录与报告"
+  },
+  {
+   "profile": "A",
+   "route": "records/draft",
+   "mainLen": 2625,
+   "breadcrumb": "记录与报告"
+  },
+  {
+   "profile": "A",
+   "route": "records/archive",
+   "mainLen": 2814,
+   "breadcrumb": "记录与报告"
+  },
+  {
+   "profile": "A",
+   "route": "records/panel",
+   "mainLen": 2866,
+   "breadcrumb": "记录与报告"
+  },
+  {
+   "profile": "A",
+   "route": "records/summary",
+   "mainLen": 3901,
+   "breadcrumb": "记录与报告"
+  },
+  {
+   "profile": "A",
+   "route": "mind/feel",
+   "mainLen": 4307,
+   "breadcrumb": "心理与生活"
+  },
+  {
+   "profile": "A",
+   "route": "mind/life",
+   "mainLen": 4088,
+   "breadcrumb": "心理与生活"
+  },
+  {
+   "profile": "A",
+   "route": "trial/build",
+   "mainLen": 4076,
+   "breadcrumb": "临床研究线索"
+  },
+  {
+   "profile": "A",
+   "route": "trial/search",
+   "mainLen": 2971,
+   "breadcrumb": "临床研究线索"
+  },
+  {
+   "profile": "A",
+   "route": "trial/chain",
+   "mainLen": 3669,
+   "breadcrumb": "临床研究线索"
+  },
+  {
+   "profile": "A",
+   "route": "trial/cand",
+   "mainLen": 2459,
+   "breadcrumb": "临床研究线索"
+  },
+  {
+   "profile": "B",
+   "route": "home",
+   "mainLen": 15581,
+   "breadcrumb": "看板"
+  },
+  {
+   "profile": "B",
+   "route": "labs",
+   "mainLen": 13378,
+   "breadcrumb": "检查与指标"
+  },
+  {
+   "profile": "B",
+   "route": "chart",
+   "mainLen": 15819,
+   "breadcrumb": "病情一图秀"
+  },
+  {
+   "profile": "B",
+   "route": "treatment",
+   "mainLen": 14646,
+   "breadcrumb": "输注与治疗"
+  },
+  {
+   "profile": "B",
+   "route": "family",
+   "mainLen": 5136,
+   "breadcrumb": "家系与基因"
+  },
+  {
+   "profile": "B",
+   "route": "review",
+   "mainLen": 2640,
+   "breadcrumb": "复诊准备"
+  },
+  {
+   "profile": "B",
+   "route": "settings",
+   "mainLen": 3434,
+   "breadcrumb": "设置"
+  },
+  {
+   "profile": "B",
+   "route": "course/timeline",
+   "mainLen": 34350,
+   "breadcrumb": "病程"
+  },
+  {
+   "profile": "B",
+   "route": "course/list",
+   "mainLen": 5685,
+   "breadcrumb": "病程"
+  },
+  {
+   "profile": "B",
+   "route": "records/lib",
+   "mainLen": 4620,
+   "breadcrumb": "记录与报告"
+  },
+  {
+   "profile": "B",
+   "route": "records/draft",
+   "mainLen": 2611,
+   "breadcrumb": "记录与报告"
+  },
+  {
+   "profile": "B",
+   "route": "records/archive",
+   "mainLen": 3167,
+   "breadcrumb": "记录与报告"
+  },
+  {
+   "profile": "B",
+   "route": "records/panel",
+   "mainLen": 3224,
+   "breadcrumb": "记录与报告"
+  },
+  {
+   "profile": "B",
+   "route": "records/summary",
+   "mainLen": 3894,
+   "breadcrumb": "记录与报告"
+  },
+  {
+   "profile": "B",
+   "route": "mind/feel",
+   "mainLen": 4474,
+   "breadcrumb": "心理与生活"
+  },
+  {
+   "profile": "B",
+   "route": "mind/life",
+   "mainLen": 4182,
+   "breadcrumb": "心理与生活"
+  },
+  {
+   "profile": "B",
+   "route": "trial/build",
+   "mainLen": 4264,
+   "breadcrumb": "临床研究线索"
+  },
+  {
+   "profile": "B",
+   "route": "trial/search",
+   "mainLen": 2967,
+   "breadcrumb": "临床研究线索"
+  },
+  {
+   "profile": "B",
+   "route": "trial/chain",
+   "mainLen": 3665,
+   "breadcrumb": "临床研究线索"
+  },
+  {
+   "profile": "B",
+   "route": "trial/cand",
+   "mainLen": 2455,
+   "breadcrumb": "临床研究线索"
+  }
+ ]
+}

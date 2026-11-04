@@ -97,7 +97,10 @@ export function scanProject(root = process.cwd()) {
     if (existsSync(p)) files.push(p)
   }
   const hits = []
+  /* 自排除：本文件含词表与自测脏样本，扫自己必然自爆（starter 潜伏 bug，2026-11-05 aatd 回流） */
+  const selfPath = 'check-derivative-leftovers.mjs'
   for (const f of files) {
+    if (f.endsWith(selfPath)) continue
     let text
     try { text = readFileSync(f, 'utf8') } catch { continue }
     hits.push(...scanText(text, relative(root, f)))

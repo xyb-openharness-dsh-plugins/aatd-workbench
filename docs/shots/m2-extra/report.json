@@ -1,0 +1,122 @@
+[
+ {
+  "id": "C0",
+  "name": "一图秀 svg.chart 存在且 path 非空（防假绿前置）",
+  "ok": true,
+  "detail": "paths=3 circles=14"
+ },
+ {
+  "id": "C-computed",
+  "name": "全部 path computed fill=none（16 号合同）",
+  "ok": true,
+  "detail": "paths=3"
+ },
+ {
+  "id": "C1",
+  "name": "量纲差异大的序列占满纵向区（高度差 <10%）",
+  "ok": true,
+  "detail": "bbox 高度 [234, 234, 234]"
+ },
+ {
+  "id": "C6",
+  "name": "数值标签不越界（viewBox 内）",
+  "ok": true,
+  "detail": "越界 0/54"
+ },
+ {
+  "id": "C8-pre",
+  "name": "时间窗控件存在（近 3 月/近 1 年/全期）",
+  "ok": true,
+  "detail": "[\"3m\",\"1y\",\"all\"]"
+ },
+ {
+  "id": "C8",
+  "name": "时间窗联动：切近 3 月后数据点减少（circle 数下降且非空前置）",
+  "ok": true,
+  "detail": "circles 14 → 1"
+ },
+ {
+  "id": "C4",
+  "name": "关治疗节点不改曲线（path[d] 逐项相等且非空）",
+  "ok": true,
+  "detail": "paths=3"
+ },
+ {
+  "id": "MT-h1",
+  "name": "卡定高 194±1px（翻面前）",
+  "ok": true,
+  "detail": "h=194"
+ },
+ {
+  "id": "MT-h2",
+  "name": "翻面不改变栅格高度（翻转前后 rect 全等）",
+  "ok": true,
+  "detail": "before=194 flipped=194 back=194"
+ },
+ {
+  "id": "MT-h3",
+  "name": "翻面不引起页面高度变化",
+  "ok": true,
+  "detail": "body true"
+ },
+ {
+  "id": "MT-h4",
+  "name": "aria-pressed 与翻面一一对应（点两次恢复正面）",
+  "ok": true,
+  "detail": "pressed=true->false"
+ },
+ {
+  "id": "MT-h5",
+  "name": "同 grid 卡片高度差 ≤1px",
+  "ok": true,
+  "detail": "maxDiff=0"
+ },
+ {
+  "id": "MT-h6",
+  "name": "其他卡翻面独立（aria-pressed=false；无其他卡时如实记 SKIP 语义，不计通过）",
+  "ok": true,
+  "detail": "others=6"
+ },
+ {
+  "id": "MT-h7",
+  "name": "内层 transform 含 matrix（3D 生效）",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "id": "MT-fold",
+  "name": "折叠卡 details 原生语义 + 收/展两态截图",
+  "ok": true,
+  "detail": "docs/shots/m2-extra/fold-{closed,open}.png"
+ },
+ {
+  "id": "Q-ai1",
+  "name": "AI 面板开关且不遮主区（#main 无横溢）",
+  "ok": true,
+  "detail": "open=true overflowOK=true"
+ },
+ {
+  "id": "Q-ai2",
+  "name": "顶栏不折行（AI 面板开/关两态 topbar 高度不变，Q33）",
+  "ok": true,
+  "detail": "顶栏单行保持；x 随业务区收窄左移属预期"
+ },
+ {
+  "id": "Q-ai3",
+  "name": "演示态明说未接入（disabled 输入 + 未接通文案）",
+  "ok": true,
+  "detail": "disabled=[true] 未接文案=true"
+ },
+ {
+  "id": "Q-ai4",
+  "name": "正文含 agent-draft 入口（携带上下文）",
+  "ok": true,
+  "detail": "links=1"
+ },
+ {
+  "id": "Q13",
+  "name": "界面标注「合成示例/仅演示」+ 未连接宿主",
+  "ok": true,
+  "detail": "{\"demo\":true,\"host\":true}"
+ }
+]
