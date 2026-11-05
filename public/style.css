@@ -579,4 +579,6 @@ html.drawer-lock{overflow:hidden}
   .match-score b{font-size:22px}
   .saved-actions{width:100%}
   .drawer{width:100%}
-}
+}/* ---------- INSPECTOR 复查修正 ---------- */
+.rows .rows-actions button,.rows button{white-space:nowrap;flex:0 0 auto}
+.rows > div{flex-wrap:wrap}

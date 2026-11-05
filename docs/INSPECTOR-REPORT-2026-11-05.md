@@ -114,3 +114,18 @@ F1 录入盘点：发作/置换/用药/感受笔记/资料登记/复诊问题/�
 回归：npm run check 退出码 0（18 步，含 check-trial-matching）；npm test 61/61；probe-aatd-m2 40 路由 0 errors；probe-m2-extra 21/21；probe-responsive 8 档×12 页 全 0；probe-disease-primer 10/10；probe-page-view 13/13；audit 44/44（未重跑 audit，check 链内含 conformance 之外的 audit 需另跑）。
 
 未修/待人工（如实）：保存的试验收藏仍只在内存（未落 dsh store，需迁移与测试）；检索地区筛选因快照无 location 字段省略并注明；SUBTITLES.trial 旧句待语义微调；MinerU 真实解析仍无凭据；V3 真机会话仍未验证。
+
+---
+
+## 定向复查（2026-11-06，用户点名六区域 · 对小粉宝/小橙宝）
+
+| 区域 | 结论 | 证据 |
+| --- | --- | --- |
+| dashboard 首页 | 通过（修一处重复） | hero 42px 状态 + stat-band 曾与 hero 重复展示「距上次发作」→ tile1 改「想问医生的问题 N 条」；结构对齐小粉宝 hero/stat-band/task-entry |
+| 一图秀 | 通过 | 238px rail + 等高条带 + 3/6/12/全期 + 分类 checkbox（色点/最近值）+ 私密 N 条不含；C1/C4/C6/C8 探针全过 |
+| AI 按钮无效/重复 | 通过（修 5 处重复） | family/mind/nutrition/records-summary 同屏 2 个「和 AI 讨论」→ 删页内副本，全站每页恰 1 个（CDP 计数）；点击实测有效：面板打开、草稿填入、不自动发送 |
+| AI 对话 demo 内容 | 通过（修连接态） | 原型演示对话与小橙宝基线同构（保留）；开发版连接宿主后 agent-label 改「已连接工作台数据」、假演示消息隐藏、notice 换连接态文案（dev-server 起真服务实测：fakeMsgVisible=[false,false]） |
+| 指标卡翻转+折线 | 通过 | 定高 194 翻转不变、aria-pressed 一一对应、背面 spark fill=none + 「共 8 次数值记录 · 同一可比组内连线」、matrix3d + backface hidden、翻转中 DOM/滚动不变 |
+| 配置入口 | 通过（修一处挤压） | 三 tab 结构完整；「切换」按钮竖排挤压 → white-space:nowrap（实测 62×45） |
+
+回归：check 18 步=0、test 63/63、探针 40 路由 0 errors / m2-extra 21·21 / 响应式 8 档全 0。截图刷新 docs/shots/inspector/（1280×860 ×12 页 ×2 档案 + flip-back.png）。

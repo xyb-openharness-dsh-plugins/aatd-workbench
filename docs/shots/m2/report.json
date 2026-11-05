@@ -14,7 +14,7 @@
   {
    "profile": "A",
    "route": "home",
-   "mainLen": 9483,
+   "mainLen": 9471,
    "breadcrumb": "看板"
   },
   {
@@ -38,13 +38,13 @@
   {
    "profile": "A",
    "route": "family",
-   "mainLen": 4971,
+   "mainLen": 3415,
    "breadcrumb": "家系与基因"
   },
   {
    "profile": "A",
    "route": "nutrition",
-   "mainLen": 4322,
+   "mainLen": 3085,
    "breadcrumb": "营养与生活"
   },
   {
@@ -62,7 +62,7 @@
   {
    "profile": "A",
    "route": "course/timeline",
-   "mainLen": 5067,
+   "mainLen": 5069,
    "breadcrumb": "病程"
   },
   {
@@ -98,43 +98,43 @@
   {
    "profile": "A",
    "route": "records/summary",
-   "mainLen": 3901,
+   "mainLen": 2530,
    "breadcrumb": "记录与报告"
   },
   {
    "profile": "A",
    "route": "mind/feel",
-   "mainLen": 4283,
+   "mainLen": 2867,
    "breadcrumb": "心理与生活"
   },
   {
    "profile": "A",
    "route": "mind/life",
-   "mainLen": 4058,
+   "mainLen": 2642,
    "breadcrumb": "心理与生活"
   },
   {
    "profile": "A",
    "route": "trial/match",
-   "mainLen": 13988,
+   "mainLen": 14003,
    "breadcrumb": "临床研究线索"
   },
   {
    "profile": "A",
    "route": "trial/search",
-   "mainLen": 8785,
+   "mainLen": 8800,
    "breadcrumb": "临床研究线索"
   },
   {
    "profile": "A",
    "route": "trial/saved",
-   "mainLen": 2264,
+   "mainLen": 2279,
    "breadcrumb": "临床研究线索"
   },
   {
    "profile": "B",
    "route": "home",
-   "mainLen": 17734,
+   "mainLen": 17719,
    "breadcrumb": "看板"
   },
   {
@@ -158,13 +158,13 @@
   {
    "profile": "B",
    "route": "family",
-   "mainLen": 5183,
+   "mainLen": 3631,
    "breadcrumb": "家系与基因"
   },
   {
    "profile": "B",
    "route": "nutrition",
-   "mainLen": 4708,
+   "mainLen": 3475,
    "breadcrumb": "营养与生活"
   },
   {
@@ -218,37 +218,37 @@
   {
    "profile": "B",
    "route": "records/summary",
-   "mainLen": 3894,
+   "mainLen": 2527,
    "breadcrumb": "记录与报告"
   },
   {
    "profile": "B",
    "route": "mind/feel",
-   "mainLen": 4632,
+   "mainLen": 3220,
    "breadcrumb": "心理与生活"
   },
   {
    "profile": "B",
    "route": "mind/life",
-   "mainLen": 4334,
+   "mainLen": 2922,
    "breadcrumb": "心理与生活"
   },
   {
    "profile": "B",
    "route": "trial/match",
-   "mainLen": 14651,
+   "mainLen": 14666,
    "breadcrumb": "临床研究线索"
   },
   {
    "profile": "B",
    "route": "trial/search",
-   "mainLen": 8781,
+   "mainLen": 8796,
    "breadcrumb": "临床研究线索"
   },
   {
    "profile": "B",
    "route": "trial/saved",
-   "mainLen": 2260,
+   "mainLen": 2275,
    "breadcrumb": "临床研究线索"
   }
  ]

@@ -581,7 +581,7 @@ function vHome() {
       <div class="chips">${(p.chips || []).map((x) => `<span class="chip on">${esc(x)}</span>`).join('')}</div>
     </div>
     <div class="stat-band">
-      <div class="stat-tile"><span>${esc(statA[0])}</span><b>${esc(statA[1])}</b><small>${esc(statA[2])}</small></div>
+      <div class="stat-tile"><span>想问医生的问题</span><b>${qs.length}</b><small>条 · 复诊准备页可编辑</small></div>
       <div class="stat-tile"><span>近 90 天发作次数</span><b>${f90}</b><small>由发作记录算出，不手填</small></div>
     </div>
   </section>
@@ -756,7 +756,7 @@ function vRecords() {
       ${row('这份汇总里有什么', '受累器官行、化验最近值、发作—缓解区间、输注计次、医生原话与想问清单（私密条目默认排除）。')}
       ${row('私密策略', privateLabel(notesFor(pk).length + rows('family_lines', pk).length, privateCount(notesFor(pk)) + privateCount(rows('family_lines', pk))))}
     </div>
-    <div class="actions"><button class="primary" data-action="open-page" data-page="summary">打开病情汇总整页 →</button>${aiBtn('records')}</div></div>`;
+    <div class="actions"><button class="primary" data-action="open-page" data-page="summary">打开病情汇总整页 →</button></div></div>`;
 }
 
 /* ---------------- 检查与指标 ---------------- */
@@ -917,7 +917,7 @@ function vFamily() {
         ${row('医生原话条目', `${fl.length} 条（涉及他人健康信息；点上方「本人确认，展开查看」后才显示全文）`)}
         ${row('筛查条目事实', `${items.length} 类（见上方清单，不涉及原话）`)}
       </div></div>`}
-  <div class="actions" style="margin-top:12px"><button data-action="entry" data-kind="family">记录一条医生原话</button>${aiBtn('family')}</div>`;
+  <div class="actions" style="margin-top:12px"><button data-action="entry" data-kind="family">记录一条医生原话</button></div>`;
 }
 
 /* ---------------- 心理与生活 ---------------- */
@@ -939,7 +939,7 @@ function vMind() {
     <div class="notice">照护者自己的记录位：「还能正常上班吗」「家里谁顶夜班」在这里承接；代记的记录逐条标注记录者。${privateLabel(burden.length, privateCount(burden))}</div>
     <div class="card"><div class="card-head"><h2>生活与负担</h2><span class="muted">只记事实，不给方法建议</span></div>
       <div class="rows">${visible.map((n) => feelRow(n)).join('') || '<p class="muted" style="padding:12px">还没有照护记录。</p>'}</div>
-      <div class="actions"><button data-action="entry" data-kind="feel">记一条照护记录</button>${aiBtn('mind')}</div></div>
+      <div class="actions"><button data-action="entry" data-kind="feel">记一条照护记录</button></div></div>
     <div class="card" style="margin-top:14px"><div class="card-head"><h2>长期话题（只提供记录位）</h2></div>
       <div class="rows">
         ${row('戒烟支持', '医生提过的支持方式照抄记录；这里不推荐产品或课程。')}
@@ -957,7 +957,7 @@ function vMind() {
     <div class="actions"><button data-action="toggle-private">收起</button></div></div>`
     : `<div class="card"><div class="card-head"><h2>当下感受（双主体）</h2><span class="muted">${privateLabel(visible.length, privateCount(feels))}</span></div>
     <div class="rows">${visible.map(feelRow).join('') || emptyBox('还没有感受记录', '反复出现的念头、复查前的紧张，都可以按日期记一条。')}</div>
-    <div class="actions"><button data-action="entry" data-kind="feel">记一条今天的感受</button>${aiBtn('mind')}</div></div>`}
+    <div class="actions"><button data-action="entry" data-kind="feel">记一条今天的感受</button></div></div>`}
   <div class="card" style="margin-top:14px"><div class="card-head"><h2>常见的几种反应</h2><span class="muted">不是医生结论</span></div>
     <div class="rows">
       ${row('反复出现的念头', '「要是早点……会不会不一样」——这类念头反复出现是常见的，不必当成倒退。')}
@@ -996,7 +996,7 @@ function vNutrition() {
       <div class="rows">
         ${notes.length ? notes.slice(-3).map((n) => row(esc(n.content), `${esc(fmtDate(n.occurred_on))} · ${n.author_role === 'family' ? '家属代记' : '本人'}`)).join('') : row('还没有记录', '食欲、吞咽、饭后胀这些感受都可以记一条')}
       </div>
-      <div class="actions"><button data-action="entry" data-kind="feel">记一条今天的感受</button>${aiBtn('nutrition')}</div></div>
+      <div class="actions"><button data-action="entry" data-kind="feel">记一条今天的感受</button></div></div>
     <div class="card"><div class="card-head"><h2>体重（家用秤）</h2><span class="muted">单位形态【待核】· 不做判读</span></div>
       <div class="rows">
         ${last ? row('最近一次', `${last.value_num} kg · ${esc(fmtDate(last.measured_on))} · ${esc(wDef.comparable_key)}`) : row('最近一次', '还没有体重记录（未检测不等于异常）')}

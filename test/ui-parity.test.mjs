@@ -40,7 +40,7 @@ test('① 视图函数：原型里的每个函数开发版都有（一个都不�
 test('② 新增函数只能是数据层与启动组（防止偷偷另写一套视图）', () => {
   const ALLOWED = new Set([
     'apiBase', 'applyData', 'loadBootstrap', 'init', 'uploadToWorkbench',
-    'persistTrialSave', 'persistTrialState',
+    'persistTrialSave', 'persistTrialState', 'setAgentPaneMode',
   ]);
   const protoSet = new Set(fnNames(proto));
   const extra = fnNames(shipped).filter((n) => !protoSet.has(n) && !ALLOWED.has(n));
