@@ -34,9 +34,9 @@
 | M4 | research/aatd/ 四件套（fetch-list / fetch-cn-registries / build-snapshot / LEDGER） | check-trial-snapshot PASS：147/147，4 通道状态 | ✅ 实测完成 |
 | M5 | 七步移植 + apiBase 契约 + MinerU v2 六部件 + test 五套 | check 17 步=0；test 60/60；audit 44/44；V1 签认（主控复测） | ✅ 实测完成 |
 | M6 | 装机 DSH Desktop | tgz 48 文件/bundle #61/宿主清单含本包/:43129 鉴权 401 实证；V2 签认；V3 停闸待人工 | ✅ 装机完成（会话级未验证） |
-| M7 | tag + release（无人值守只备草稿 docs/release-draft/） | RELEASE-NOTES-v0.5.0.md 草稿就绪 | 🔧 草稿冻结（晨审放行） |
-| M8 | BACKLOG 状态行回填（无人值守只备 PR 草稿） | BACKLOG-STATUS-PR.md 草稿就绪（31 号口径） | 🔧 草稿冻结（晨审放行） |
-| M9 | 经验收敛回流 starter + MORNING-REVIEW.md | starter 1.10.0-rc.13（自排除修复+L61–L65+probe 模板）；starter 自检 214 pass/test 67·67；MORNING-REVIEW.md 六节 | ✅ 实测完成 |
+| M7 | tag + release | **已执行（用户在场授权）**：tag v0.6.0 + [Release v0.6.0](https://github.com/xyb-openharness-dsh-plugins/aatd-workbench/releases/tag/v0.6.0)（tgz+sha256 72c160cb…） | ✅ 实测完成 |
+| M8 | BACKLOG 状态行回填（31 号：只改状态列） | **已执行**：[PR #61](https://github.com/xyb-openharness-dsh-plugins/.github/pull/61)（先 pull main，单行改动） | ✅ PR 已开（合并=维护者动作） |
+| M9 | 经验收敛回流 starter + MORNING-REVIEW.md | rc.13（自排除修复+L61–L65+probe 模板）+ rc.14（T2 去注释+11 条自测例+L66–L69）；starter 自检 217 pass / test 67·67；项目 DEV-REQUIREMENTS 追加 5 条新坑（带来源）；docs/SQLITE-INVENTORY.md（G4） | ✅ 实测完成 |
 
 ## 闸口记录
 

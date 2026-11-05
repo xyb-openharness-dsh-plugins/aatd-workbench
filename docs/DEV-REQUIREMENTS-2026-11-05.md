@@ -37,3 +37,11 @@
     验收：node --test test/pack-contents.test.mjs。
 17. **改包必升版**：本次 0.1.0 → 0.5.0（package.json 与 VERSION 同步）。
 18. **装机只向实际 DSH Desktop profile 安装**：M6 范围，本里程碑未执行（未验证项记 docs/M5-GAPS.md）。
+
+## 夜班+INSPECTOR 轮新坑（带错误来源，2026-11-06 追加）
+
+1. **升版重装先 remove 旧 tgz**（来源：0.6.0 重装 ENOENT）：Desktop profile 依赖 file: 指旧文件名；流程固定 remove → add 新 tgz → 校验 bundles。
+2. **迁移加列必须同步唯一源**（来源：0002 visits.hospital 使 store.test ④ parity 红）：bootstrap 走 SELECT *，新可空列会进读模型行；demo-data 同提交补同名字段，migrate 测试 executed 断言随账本更新。
+3. **检查器词表去注释再扫**（来源：check-trial-matching T2 把 doc 注释「不设 suitability 字段」判成命名）：T2 类禁词扫 stripComments 后文本；自测加注释回归例（11/11）。
+4. **Agent 批处理一律绝对路径**（来源：checker 双副本补丁打到错误副本）：相对路径 + 持久 cwd 漂移会静默改错文件；改完 diff 校验副本一致。
+5. **录入窗唯一性**：新增 openForm 通道后，每页显式编辑入口仍 ≤1 主按钮（IP6），其余收进「⋯ 更多」。
