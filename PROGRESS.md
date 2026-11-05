@@ -13,3 +13,13 @@
 - 下一步（晨审）：追认 G1–G3/V1/V2 → V3 真机走查 → M7 tag/release → M8 BACKLOG PR（草稿在 docs/release-draft/）
 - 阻塞：V3 需授权会话（人工）；MinerU 无 Token；NMPA 412
 - 闸口：G1/G2/G3/V1/V2 自动签认通过（待追认）；V3 停闸待人工
+
+## 2026-11-05 晚追加（FAMILY-INSPECTOR 审查与修复 + E8 收尾）
+
+- INSPECTOR 审查：docs/INSPECTOR-REPORT-2026-11-05.md（27 失败/2 待人工）→ 修复轮完成（原型 v0.3.0 / 包 v0.6.0）。
+- 已修：设置三 tab、通用录入窗（三态按钮 ×7 类入口）、营养与生活页、一图秀 rail 双栏等高条带、试验匹配三子页 + drawer、就医信息多医院（schema 0002）、check-trial-matching 入链、A 组层级。
+- E8 收尾：saved_trials 0003 落库 + upsert/state/remove 路由 + 客户端水合与持久化（test 63/63）。
+- 装机：0.6.0 tgz 重装 Desktop profile（bundle #61、真机 :43129 路由注册实证）。
+- G4：docs/SQLITE-INVENTORY.md（21 表/迁移账本 3/判读列 0）。
+- 回归：check 18 步=0、test 63/63、audit 44/44、探针全过（40 路由 / 21·21 / 响应式 / primer / page-view）。
+- 仍待人工：V3 授权会话走查、MinerU Token、NMPA 补查。
