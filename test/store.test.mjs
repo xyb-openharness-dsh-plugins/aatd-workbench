@@ -39,7 +39,7 @@ after(() => { try { rmSync(tmp, { recursive: true, force: true }); } catch { /* 
 test('① migrate 幂等：第二次执行不重跑已应用的迁移', () => {
   const db = freshDb();
   const first = migrate(db);
-  assert.deepEqual(first.executed, ['0001_initial.sql', '0002_visits_hospital.sql'], '首次应执行 0001+0002');
+  assert.deepEqual(first.executed, ['0001_initial.sql', '0002_visits_hospital.sql', '0003_saved_trials.sql'], '首次应执行 0001+0002+0003');
   const second = migrate(db);
   assert.deepEqual(second.executed, [], '第二次不应重跑');
   close(db);
@@ -202,4 +202,21 @@ test('⑪ 文件库：真实落盘 + 重开后资料仍在（播种只发生一�
   assert.equal(hasDemoData(db2), true, '重开时已播种，不该再种一次');
   assert.equal(db2.prepare('SELECT COUNT(*) AS n FROM notes').get().n, DEMO.notes.length);
   close(db2);
+});
+
+test('⑤ saved_trials：重复收藏=改 state 不插第二行；remove=零副作用 in_use=0', () => {
+  const db = freshDb();
+  migrate(db);
+  const now = '2026-11-05T20:00:00.000Z';
+  const ins = db.prepare(`INSERT INTO saved_trials (profile_key, trial_key, saved_on, state, in_use, created_at)
+    VALUES (?, ?, ?, ?, 1, ?)
+    ON CONFLICT(profile_key, trial_key) DO UPDATE SET in_use = 1, state = excluded.state, saved_on = excluded.saved_on`);
+  ins.run('A', 'NCT-DEMO-1', '2026-11-05', 'following', now);
+  ins.run('A', 'NCT-DEMO-1', '2026-11-05', 'archived', now);
+  const rows = db.prepare('SELECT * FROM saved_trials WHERE profile_key = ?').all('A');
+  assert.equal(rows.length, 1, 'UNIQUE(profile,trial)：同一条只一行');
+  assert.equal(rows[0].state, 'archived', '重复收藏更新三态');
+  db.prepare('UPDATE saved_trials SET in_use = 0 WHERE profile_key = ? AND trial_key = ?').run('A', 'NCT-DEMO-1');
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM saved_trials WHERE profile_key = ? AND in_use = 1').get('A').n, 0, '移除=零副作用');
+  close(db);
 });

@@ -101,6 +101,42 @@ function applyData(data) {
     if (!state.sel[k]) state.sel[k] = defaultSel(k);
   });
   TRIAL_DEMO = D.trial_demo || [];
+  /* E8 落库：服务端 saved_trials → 本机收藏态（API 不可达时保留内存值，不覆盖） */
+  if (Array.isArray(data.saved_trials)) {
+    state.mem.savedTrials = data.saved_trials
+      .filter((r) => r && r.trial_key)
+      .map((r) => ({ trialKey: String(r.trial_key), savedOn: r.saved_on || '未记录', state: SAVED_STATE_LABEL[r.state] || '在跟' }));
+  }
+}
+
+/* 收藏三态：库内英文键 ↔ 界面中文标签（一处映射，两处用） */
+const SAVED_STATE_LABEL = { following: '在跟', to_ask: '准备问', archived: '已归档' };
+const SAVED_STATE_KEY = { '在跟': 'following', '准备问': 'to_ask', '已归档': 'archived' };
+async function persistTrialSave(key, saved) {
+  if (DATA_SOURCE !== 'api') return;
+  try {
+    if (saved) {
+      await fetch(`${apiBase()}/api/aatd/saved_trials`, {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ profile_key: state.profile, trial_key: key, saved_on: todayISO(), state: 'following' }),
+      });
+    } else {
+      await fetch(`${apiBase()}/api/aatd/saved_trials/by-key/remove`, {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ profile_key: state.profile, trial_key: key }),
+      });
+    }
+  } catch { toast('本机收藏已更新；同步服务端失败（演示数据不丢）'); }
+}
+async function persistTrialState(key, label) {
+  if (DATA_SOURCE !== 'api') return;
+  try {
+    const hit = (state.mem.savedTrials || []).find((x) => x.trialKey === key);
+    await fetch(`${apiBase()}/api/aatd/saved_trials`, {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ profile_key: state.profile, trial_key: key, saved_on: hit?.savedOn || todayISO(), state: SAVED_STATE_KEY[label] || 'following' }),
+    });
+  } catch { toast('三态已切换；同步服务端失败（演示数据不丢）'); }
 }
 
 /** 拉真数据。返回 {reachable, data}：
@@ -1378,11 +1414,13 @@ function toggleTrialSaved(key) {
   if (i >= 0) {
     list.splice(i, 1);
     state.mem.savedTrials = list;
+    persistTrialSave(key, false);
     toast('已从本机收藏移除（零副作用：不改登记状态，不通知研究中心）');
     return false;
   }
   list.push({ trialKey: key, savedOn: todayISO(), state: '在跟' });
   state.mem.savedTrials = list;
+  persistTrialSave(key, true);
   toast('已收藏到本机（只做个人跟踪，不等于报名）');
   return true;
 }
@@ -1393,6 +1431,7 @@ function setSavedTrialState(key, next) {
   if (!hit) return;
   hit.state = next;
   state.mem.savedTrials = list;
+  persistTrialState(key, next);
 }
 function vTrialSaved() {
   const list = savedTrialList();

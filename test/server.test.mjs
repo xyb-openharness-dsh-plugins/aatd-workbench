@@ -275,3 +275,37 @@ test('⑨ 上传体积：超过 30 MB 回 413', async () => {
     wb.close();
   }
 });
+
+test('⑨ saved_trials 路由：GET 列表 / POST upsert / by-key remove / 非法 state 400', async () => {
+  const wb = makeWorkbench();
+  const { server, port } = await startWorkbenchServer({ port: 0, workbench: wb });
+  try {
+    const base = `http://127.0.0.1:${port}${API_PREFIX}`;
+    const list0 = await (await fetch(`${base}/saved_trials?profile=A`)).json();
+    assert.deepEqual(list0.saved_trials, [], '初始为空（不是零结果声明，是确实没有收藏）');
+
+    const save = await fetch(`${base}/saved_trials`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ profile_key: 'A', trial_key: 'NCT-DEMO-1', saved_on: '2026-11-05', state: 'following' }) });
+    assert.equal(save.status, 200);
+    const save2 = await fetch(`${base}/saved_trials`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ profile_key: 'A', trial_key: 'NCT-DEMO-1', saved_on: '2026-11-05', state: 'to_ask' }) });
+    assert.equal(save2.status, 200);
+    const list1 = await (await fetch(`${base}/saved_trials?profile=A`)).json();
+    assert.equal(list1.saved_trials.length, 1, '重复收藏不插第二行');
+    assert.equal(list1.saved_trials[0].state, 'to_ask');
+
+    const bad = await fetch(`${base}/saved_trials`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ profile_key: 'A', trial_key: 'X', state: 'probably_good' }) });
+    assert.equal(bad.status, 400, '非法 state 回 400');
+    assert.equal((await bad.json()).error, 'bad_state');
+
+    const rm = await fetch(`${base}/saved_trials/by-key/remove`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ profile_key: 'A', trial_key: 'NCT-DEMO-1' }) });
+    assert.equal(rm.status, 200);
+    const list2 = await (await fetch(`${base}/saved_trials?profile=A`)).json();
+    assert.equal(list2.saved_trials.length, 0, '移除后列表为空（in_use=0，零副作用）');
+
+    const miss = await fetch(`${base}/saved_trials/by-key/remove`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ profile_key: 'A' }) });
+    assert.equal(miss.status, 400, '缺 trial_key 回 400');
+  } finally {
+    server.closeAllConnections?.();
+    server.close();
+    wb.close();
+  }
+});

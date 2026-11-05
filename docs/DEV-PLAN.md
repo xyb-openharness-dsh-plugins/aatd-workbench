@@ -54,3 +54,11 @@
 - 已修：C1–C4 设置三 tab（工作区/文档解析 MinerU/临床数据库，token 只露后 4 位）；F2–F4 通用录入窗（三态按钮、≤6 字段、inputmode、必填提示，5 类入口）；B1 营养与生活页（体重按次记录，不判读）；A5/A6/A8（42px 状态大字、暖底左条行动带、指标大数字 ≥30px）；A10 改判（viewport 断点已为 1180/900/600，container query 按主区宽度属 1.2 择优）；F6 schema 0002（visits + hospital/contact/contact_source）与演示数据多家医院。
 - 进行中：D1–D5 一图秀 rail 双栏 + E2–E6/E8/E10 试验匹配层（专项代理）。
 - 版本：0.5.0 → 0.3.0 原型轮次（原型 v0.3.0 / 开发版随升）。
+
+## 2026-11-05 晚：E8 收藏落库 + 0.6.0 重装
+
+- schema 0003_saved_trials.sql（UNIQUE(profile,trial_key)，三态 following/to_ask/archived；哈希入 freeze-contract）。
+- 路由：GET/POST /saved_trials（upsert 语义：重复收藏=改 state；非法 state 400）+ /saved_trials/:id/state|remove + /saved_trials/by-key/remove；GET 只出 in_use=1。
+- 开发版客户端：applyData 水合 saved_trials → 本机收藏态；toggle/三态切换 persistTrialSave/persistTrialState（DATA_SOURCE==='api' 时 POST，失败 toast 不丢本地）。
+- 测试 63/63（新增 store ⑤ upsert/remove 幂等、server ⑨ 路由正反例）；check 18 步=0；audit 44/44。
+- 装机：0.6.0 tgz 重装 Desktop profile + bundle 登记 + 真机路由注册实证（V2 追加签认见 docs/signoffs/V2-V3-自动签认.md）。

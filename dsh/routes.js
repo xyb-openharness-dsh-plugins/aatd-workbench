@@ -79,6 +79,7 @@ const RESOURCE_COLUMNS = {
   infusion_series: { columns: ['profile_key', 'label', 'cadence_note', 'started_on', 'ended_on', 'is_private'], required: ['profile_key', 'label', 'started_on'] },
   family_lines: { columns: ['profile_key', 'person_rel', 'doctor_quote', 'item_fact', 'happened_on', 'is_private'], required: ['profile_key', 'person_rel'] },
   ai_candidates: { columns: ['profile_key', 'target_table', 'payload', 'status'], required: ['profile_key', 'target_table', 'payload'] },
+  saved_trials: { columns: ['profile_key', 'trial_key', 'saved_on', 'state'], required: ['profile_key', 'trial_key'] },
 }
 
 /** POST 一行。返回 {id}；字段缺失 / 类型不对走 400，不裸 throw。 */
@@ -97,6 +98,18 @@ function insertResource(db, resource, body) {
   const cols = spec.columns.join(', ')
   const marks = spec.columns.map(() => '?').join(', ')
   try {
+    /* saved_trials 语义：重复收藏同一条登记 = 恢复并改 state，不是插入第二行（UNIQUE 约束）。 */
+    if (resource === 'saved_trials') {
+      const state = String(values[3] ?? 'following')
+      if (!['following', 'to_ask', 'archived'].includes(state)) {
+        return { status: 400, body: { error: 'bad_state', message: 'state 只许 following / to_ask / archived' } }
+      }
+      const r = db.prepare(`INSERT INTO saved_trials (profile_key, trial_key, saved_on, state, in_use, created_at)
+        VALUES (?, ?, ?, ?, 1, ?)
+        ON CONFLICT(profile_key, trial_key) DO UPDATE SET in_use = 1, state = excluded.state, saved_on = excluded.saved_on`)
+        .run(values[0], values[1], values[2] ?? new Date().toISOString().slice(0, 10), state, new Date().toISOString())
+      return { status: 200, body: { id: Number(r.lastInsertRowid), upserted: true } }
+    }
     const r = db.prepare(`INSERT INTO ${resource} (${cols}, created_at) VALUES (${marks}, ?)`).run(...values, new Date().toISOString())
     return { status: 200, body: { id: Number(r.lastInsertRowid) } }
   } catch (error) {
@@ -112,7 +125,9 @@ function listResource(db, resource, profileKey) {
     return { status: 404, body: { error: 'profile_not_found', message: `没有这个档案：${profileKey}` } }
   }
   const order = resource === 'metric_defs' ? 'ORDER BY ord, rowid' : 'ORDER BY rowid'
-  const list = db.prepare(`SELECT * FROM ${resource} WHERE profile_key = ? ${order}`).all(profileKey)
+  /* saved_trials 的 GET 语义 = 「在跟清单」：in_use=0 的已移除项不出列表（bootstrap 同口径）。 */
+  const where = resource === 'saved_trials' ? 'profile_key = ? AND in_use = 1' : 'profile_key = ?'
+  const list = db.prepare(`SELECT * FROM ${resource} WHERE ${where} ${order}`).all(profileKey)
     .map((r) => {
       if (resource === 'ai_candidates') {
         try { return { ...r, payload: JSON.parse(r.payload) } } catch { return r }
@@ -164,7 +179,7 @@ export function createApiHandler({ source, version, build, demo = null, serveUi,
     }
 
     /* REST：GET 列表 / POST 新增。 */
-    const resourceMatch = path.match(new RegExp(`^${API_PREFIX}/(profiles|notes|metric_defs|metric_records|reports|med_events|episodes|infusion_series|family_lines|ai_candidates)$`))
+    const resourceMatch = path.match(new RegExp(`^${API_PREFIX}/(profiles|notes|metric_defs|metric_records|reports|med_events|episodes|infusion_series|family_lines|ai_candidates|saved_trials)$`))
     if (resourceMatch) {
       const resource = resourceMatch[1]
       if (req.method === 'GET') {
@@ -202,6 +217,51 @@ export function createApiHandler({ source, version, build, demo = null, serveUi,
         const { status, body } = errorBody(error)
         return sendJson(res, status, body)
       }
+    }
+
+    /* 试验收藏三态（E8）：POST state 改三态；POST remove = in_use=0（零副作用，只删本机收藏）。 */
+    const trialStateMatch = path.match(new RegExp(`^${API_PREFIX}/saved_trials/(\\d+)/(state|remove)$`))
+    if (trialStateMatch) {
+      if (req.method !== 'POST') return sendJson(res, 405, { error: 'method_not_allowed' })
+      let body = {}
+      try {
+        const raw = await readBody(req, 64 * 1024)
+        body = raw.length ? JSON.parse(raw.toString('utf8')) : {}
+      } catch {
+        return sendJson(res, 400, { error: 'bad_json', message: '请求体不是合法 JSON' })
+      }
+      try {
+        const id = Number(trialStateMatch[1])
+        if (trialStateMatch[2] === 'remove') {
+          source.db.prepare('UPDATE saved_trials SET in_use = 0 WHERE id = ?').run(id)
+          return sendJson(res, 200, { ok: true, removed: id })
+        }
+        const state = String(body.state || '')
+        if (!['following', 'to_ask', 'archived'].includes(state)) {
+          return sendJson(res, 400, { error: 'bad_state', message: 'state 只许 following / to_ask / archived' })
+        }
+        source.db.prepare('UPDATE saved_trials SET state = ? WHERE id = ?').run(state, id)
+        return sendJson(res, 200, { ok: true, id, state })
+      } catch (error) {
+        const { status, body: errBody } = errorBody(error)
+        return sendJson(res, status, errBody)
+      }
+    }
+
+    /* 按 key 移除收藏（客户端只有 trialKey，没有库内 id）。 */
+    const trialRemoveKeyMatch = path.match(new RegExp(`^${API_PREFIX}/saved_trials/by-key/remove$`))
+    if (trialRemoveKeyMatch) {
+      if (req.method !== 'POST') return sendJson(res, 405, { error: 'method_not_allowed' })
+      let body = {}
+      try {
+        const raw = await readBody(req, 64 * 1024)
+        body = raw.length ? JSON.parse(raw.toString('utf8')) : {}
+      } catch {
+        return sendJson(res, 400, { error: 'bad_json', message: '请求体不是合法 JSON' })
+      }
+      if (!body.profile_key || !body.trial_key) return sendJson(res, 400, { error: 'missing_fields', message: '缺少 profile_key / trial_key' })
+      source.db.prepare('UPDATE saved_trials SET in_use = 0 WHERE profile_key = ? AND trial_key = ?').run(body.profile_key, body.trial_key)
+      return sendJson(res, 200, { ok: true, removed: String(body.trial_key) })
     }
 
     /* 复诊材料 markdown：私密条目在服务端剔除（export.js 约束 1，三出口之一）。 */

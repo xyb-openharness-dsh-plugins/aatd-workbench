@@ -175,6 +175,7 @@ export function bootstrap(db, { version, build, demo = null } = {}) {
     infusion_series: rows(db, 'SELECT * FROM infusion_series ORDER BY rowid'),
     flare_episodes: rows(db, 'SELECT * FROM flare_episodes ORDER BY rowid'),
     family_lines: rows(db, 'SELECT * FROM family_lines ORDER BY rowid'),
+    saved_trials: rows(db, 'SELECT * FROM saved_trials WHERE in_use = 1 ORDER BY rowid'),
     section_titles: rows(db, 'SELECT * FROM section_titles ORDER BY profile_key, ord, rowid'),
     /* 派生值：页面同款算法的服务端版本（口径 6/7）。前端自己也算，两边一致由测试钉住。 */
     derived: {},

@@ -20,3 +20,9 @@
 - 文件：0002_visits_hospital.sql
 - sha256：4044e9d07ff7d26a5889c3ba0dfd52d9a4b7f748261cf2bb4adecccde5c6f336
 - 变更：visits 增可空列 hospital / contact / contact_source（多家医院卡片用）；旧行 NULL 保留。
+
+## 0003（2026-11-05 晚追加，E8 收藏落库）
+
+- 文件：0003_saved_trials.sql
+- sha256：4a7ba8c7c1fa5f52ff793f47cf41a0b6e780e4192964db2c2af1a24b81babb93
+- 变更：新增 saved_trials 表（本机收藏三态），UNIQUE(profile_key, trial_key)。
