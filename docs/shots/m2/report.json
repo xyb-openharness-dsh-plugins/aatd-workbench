@@ -14,7 +14,7 @@
   {
    "profile": "A",
    "route": "home",
-   "mainLen": 9471,
+   "mainLen": 9563,
    "breadcrumb": "看板"
   },
   {
@@ -134,7 +134,7 @@
   {
    "profile": "B",
    "route": "home",
-   "mainLen": 17719,
+   "mainLen": 17811,
    "breadcrumb": "看板"
   },
   {
@@ -182,7 +182,7 @@
   {
    "profile": "B",
    "route": "course/timeline",
-   "mainLen": 30537,
+   "mainLen": 30535,
    "breadcrumb": "病程"
   },
   {

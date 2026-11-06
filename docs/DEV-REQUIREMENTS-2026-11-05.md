@@ -45,3 +45,6 @@
 3. **检查器词表去注释再扫**（来源：check-trial-matching T2 把 doc 注释「不设 suitability 字段」判成命名）：T2 类禁词扫 stripComments 后文本；自测加注释回归例（11/11）。
 4. **Agent 批处理一律绝对路径**（来源：checker 双副本补丁打到错误副本）：相对路径 + 持久 cwd 漂移会静默改错文件；改完 diff 校验副本一致。
 5. **录入窗唯一性**：新增 openForm 通道后，每页显式编辑入口仍 ≤1 主按钮（IP6），其余收进「⋯ 更多」。
+6. **探针必须打项目页面**（来源：2026-11-07 用户实测「? 打不开」）：primer 面板模块完整、
+   probe-disease-primer 10/10 全绿，但原型 ? 按钮从未绑定 dpOpen——闸口测的是 starter
+   参考页。已固化：probe-m2-extra P-home（首页入口 + 顶栏 ? 打开整页面板、四段、Esc）。

@@ -582,3 +582,6 @@ html.drawer-lock{overflow:hidden}
 }/* ---------- INSPECTOR 复查修正 ---------- */
 .rows .rows-actions button,.rows button{white-space:nowrap;flex:0 0 auto}
 .rows > div{flex-wrap:wrap}
+/* ---------- 病情概要入口（首页 hero） ---------- */
+.chip.primer-entry{background:var(--brand-soft);border-color:var(--brand-line);color:var(--brand-deep);font-weight:600;cursor:pointer}
+.chip.primer-entry:hover{border-color:var(--brand-deep)}

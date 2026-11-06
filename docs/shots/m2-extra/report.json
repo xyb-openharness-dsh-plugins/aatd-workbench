@@ -124,5 +124,11 @@
   "name": "私密原话 0 泄漏（看板+AI 面板+复诊准备导出预览三处抽查）",
   "ok": true,
   "detail": "泄漏 0 条"
+ },
+ {
+  "id": "P-home",
+  "name": "首页病情概要入口 + ? 按钮：点击打开整页面板、四段齐全、Esc 收起",
+  "ok": true,
+  "detail": "hash=#disease-primer panelH=940/940"
  }
 ]

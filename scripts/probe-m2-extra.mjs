@@ -201,6 +201,24 @@ try {
   const leaked = secrets.filter((x) => allText.includes(x));
   check('Q35-fix', '私密原话 0 泄漏（看板+AI 面板+复诊准备导出预览三处抽查）', leaked.length === 0 && secrets.length === 4, `泄漏 ${leaked.length} 条${leaked.length ? '：' + leaked.join(';') : ''}`);
 
+  /* ---------- 病情概要接线（P 组固化 · 2026-11-07 补 ? 按钮绑定） ---------- */
+  await go('home');
+  const primer = JSON.parse(await cdp.eval(`(() => {
+    const heroBtn = document.querySelector('.chip.primer-entry[data-primer-open]');
+    const topQ = document.querySelector('button[data-primer-open].primer-btn');
+    if (!heroBtn || !topQ) return JSON.stringify({ entries: false });
+    const h0 = history.length;
+    heroBtn.click();
+    const panel = document.getElementById('disease-primer');
+    const secs = [...panel.querySelectorAll('.dp-section h3')].map((x) => x.textContent);
+    const opened = !panel.hidden;
+    const hash = location.hash;
+    const panelH = Math.round(panel.getBoundingClientRect().height);
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    return JSON.stringify({ entries: true, opened, hash, panelH, vp: innerHeight, fourSections: secs.length === 4 && secs[0] === '定义' && secs[3] === '发展趋势', hasBack: !!panel.querySelector('.dp-back'), hasClose: !!panel.querySelector('.dp-close') });
+  })()`));
+  check('P-home', '首页病情概要入口 + ? 按钮：点击打开整页面板、四段齐全、Esc 收起', primer.entries === true && primer.opened === true && primer.fourSections === true && primer.panelH >= primer.vp * 0.9, `hash=${primer.hash} panelH=${primer.panelH}/${primer.vp}`);
+
   await shot(join(SHOTS, 'final.png'));
 } catch (err) {
   check('CRASH', '探针执行', false, err.message);

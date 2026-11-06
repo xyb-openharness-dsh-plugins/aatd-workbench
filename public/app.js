@@ -655,7 +655,7 @@ function vHome() {
       <span class="eyebrow">演示档案 · AAT 缺乏症</span>
       <h1>${esc(p.name)}，这次想先看什么</h1>
       <p>${esc(p.headline)}</p>
-      <div class="chips">${(p.chips || []).map((x) => `<span class="chip on">${esc(x)}</span>`).join('')}</div>
+      <div class="chips">${(p.chips || []).map((x) => `<span class="chip on">${esc(x)}</span>`).join('')}<button class="chip primer-entry" data-primer-open aria-haspopup="dialog">病情概要 ?</button></div>
     </div>
     <div class="stat-band">
       <div class="stat-tile"><span>想问医生的问题</span><b>${qs.length}</b><small>条 · 复诊准备页可编辑</small></div>
@@ -1753,6 +1753,11 @@ function dpApplyClose() {
   }
   if (DP.scrollY != null) $('#main').scrollTop = DP.scrollY;
   DP.trigger = null;
+  /* 深链接直开（#disease-primer 刷新）后关闭：hash 会残留在 URL 上，
+     不清掉的话下一次 hashchange（甚至刚发生的 history.back）会让 dpFromHash 立刻重开。 */
+  if (location.hash === '#disease-primer') {
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (_) {}
+  }
 }
 function dpClose() {
   if (!DP.open) return;
@@ -2206,6 +2211,8 @@ document.addEventListener('click', (e) => {
     catch (_) { toast('协议链接解析失败（演示）'); }
     return;
   }
+  const primerBtn = e.target.closest('[data-primer-open]');
+  if (primerBtn) { e.preventDefault(); dpOpen(primerBtn); return; }
   const navBtn = e.target.closest('[data-pick-profile]');
   if (navBtn) {
     state.profile = navBtn.dataset.pickProfile;
@@ -2393,12 +2400,18 @@ document.addEventListener('keydown', (e) => {
   if (PV.open) { e.preventDefault(); pvClose(); return; }
   if ($('#dialog').open) { e.preventDefault(); closeDialog(); return; }
 });
+dpFromHash();
 window.addEventListener('popstate', () => {
   if (DP.open) { dpApplyClose(); return; }
   if (PV.open && !(history.state && history.state.pv)) { pvApplyClose(); }
   applyHash(); render();
 });
-window.addEventListener('hashchange', () => { applyHash(); render(); });
+function dpFromHash() {
+  /* 深链接 #disease-primer：直达概要（前进/刷新）；离开该 hash 时收起 */
+  if (location.hash === '#disease-primer') { if (!DP.open) dpOpen(null); }
+  else if (DP.open && !DP.el?.contains(document.activeElement)) dpApplyClose();
+}
+window.addEventListener('hashchange', () => { dpFromHash(); applyHash(); render(); });
 
 function toggleFont() {
   const on = document.body.classList.toggle('large');
