@@ -86,16 +86,24 @@ test('③ register 参数：标题、仓库、customFrame=true（否则顶栏没
   assert.equal(registered.repository, 'https://github.com/xyb-openharness-dsh-plugins/aatd-workbench');
   assert.equal(registered.customFrame, true);
   assert.equal(registered.embedded, true);
-  assert.equal(registered.version, '0.6.1');
+  assert.equal(registered.version, '0.6.2');
 });
 
 test('④ Panel：自绘 header（首子元素，带 macOS 避让）+ 业务 iframe 指向 /api/aatd/ui/ + 会话 aside + splitter', () => {
   const spec = loadClient();
   const mod = spec.factory(() => React);
   let Panel = null;
+  let owned = null;
   mod.apply({
     effect(fn) { return fn(); },
-    desktopWorkbenches: { register(meta, P) { Panel = P; } },
+    desktopWorkbenches: {
+      register(meta, P) { Panel = P; },
+      /* 契约：hasConversation = ownsSession(currentSession())，不再看 conversation prop */
+      currentSession() { return owned; },
+      ownsSession() { return Boolean(owned); },
+      subscribe() { return () => {}; },
+      newSession() { return Promise.resolve(null); },
+    },
   });
 
   const tree = Panel({});
@@ -117,6 +125,7 @@ test('④ Panel：自绘 header（首子元素，带 macOS 避让）+ 业务 ifr
   assert.equal(aside.tag, 'aside');
   assert.equal(aside.props.style.display, 'none', '无会话时 aside 隐藏但不卸载');
 
+  owned = 'session-under-test'
   const live = Panel({ conversation: { tag: 'div', props: {}, children: ['native'] } });
   const liveAside = live.children[1].children.find((c) => c && c.tag === 'aside');
   assert.equal(liveAside.props.style.width, '35%', '默认会话宽度取 AGENT_PANE.def=0.35');
